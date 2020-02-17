@@ -62,6 +62,7 @@ hasRole('역활') 과 같은 표현식을 사용할수 있도록 선언
 	<security:csrf disabled="false"/>
 	<security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
 	<security:intercept-url pattern="/auth/**" access="permitAll()"/>
+	<security:intercept-url pattern="/user/**" access="permitAll()"/>
 	<security:intercept-url pattern="/**" access="permitAll"/>
 	
 	<!-- 정상적으로 로그인이 되면 /로 redirect
