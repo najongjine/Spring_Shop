@@ -1,5 +1,6 @@
 package com.biz.shop.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -18,13 +19,18 @@ import lombok.extern.slf4j.Slf4j;
 public class DeptService {
 	private final DeptDao deptDao;
 	
-	public void save(DeptVO deptVO) {
-		deptDao.save(deptVO);
+	public DeptVO save(DeptVO deptVO) {
+		return deptDao.save(deptVO);
 	}
 
 	public DeptVO findById(long id) {
 		// TODO Auto-generated method stub
 		Optional<DeptVO> deptVO=deptDao.findById(id);
 		return deptVO.get();
+	}
+
+	public List<DeptVO> selectAll() {
+		List<DeptVO> deptList=deptDao.findAll();
+		return deptList;
 	}
 }

@@ -53,11 +53,11 @@ col-md-7 col-12 해상도가 768보다 크면 7칸만 차지하고
 				<form:errors path="d_addr" class="in-errors"/>
 			</div>
 			<div class="form-group">
-				<form:input path="d_manager" class="form-control" placeholder="메니저"/>
+				<form:input path="d_manager" class="form-control" placeholder="담당자"/>
 				<form:errors path="d_manager" class="in-errors"/>
 			</div>
 			<div class="form-group">
-				<form:textarea path="d_mtel" rows="" cols="" placeholder="핸드폰번호"/>
+				<form:textarea path="d_mtel" rows="" cols="" placeholder="담장자 연락처"/>
 			</div>
 			<div class="form-group">
 				<form:textarea path="d_rem" rows="" cols="" placeholder="비고"/>
@@ -67,5 +67,8 @@ col-md-7 col-12 해상도가 768보다 크면 7칸만 차지하고
 				<button>저장</button>
 			</div>
 		</form:form>
+	</article>
+	<article class="col-md-4 col-sm-12 bg-light dept-list">
+		<%@ include file="/WEB-INF/views/admin/dept_list.jsp" %>
 	</article>
 </section>

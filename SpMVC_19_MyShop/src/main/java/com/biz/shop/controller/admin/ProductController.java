@@ -36,22 +36,28 @@ public class ProductController {
 	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
 	public String product(@ModelAttribute("productVO") ProductVO productVO,Model model) {
 		productVO = new ProductVO();
-
-		List<ProductVO> proList = proService.selectAll();
-
-		model.addAttribute("PRO_LIST", proList);
+		modelMapping(model);
 		model.addAttribute("productVO", productVO);
-		model.addAttribute("BODY", "PRODUCT");
+		
+		return "admin/main";
+	}
+	
+	@RequestMapping(value = "/detail", method = RequestMethod.POST)
+	public String product_detail(@Valid @ModelAttribute("productVO") ProductVO productVO, BindingResult result
+			,Model model) {
+		if (result.hasErrors()) {
+			modelMapping(model);
+			return "admin/main";
+		}
+		modelMapping(model);
+		model.addAttribute("PRO_BODY", "DETAIL");
 		return "admin/main";
 	}
 
 	@RequestMapping(value = "/input", method = RequestMethod.POST)
-	public String product(@Valid @ModelAttribute("productVO") ProductVO productVO, BindingResult result, Model model
+	public String product(@ModelAttribute("productVO") ProductVO productVO, Model model
 			,SessionStatus status) {
-		if (result.hasErrors()) {
-			model.addAttribute("BODY", "PRODUCT");
-			return "admin/main";
-		}
+		
 
 		proService.save(productVO);
 		status.setComplete();
@@ -61,14 +67,17 @@ public class ProductController {
 	
 	@RequestMapping(value = "/update/{id}",method=RequestMethod.GET)
 	public String update(@ModelAttribute("productVO") ProductVO productVO,@PathVariable("id") String strId,Model model) {
-		List<ProductVO> proList = proService.selectAll();
-
-		model.addAttribute("PRO_LIST", proList);
+		modelMapping(model);
 		
 		long id=Long.valueOf(strId);
 		productVO=proService.findById(id);
 		model.addAttribute("productVO", productVO);
-		model.addAttribute("BODY", "PRODUCT");
 		return "admin/main";
+	}
+	
+	private void modelMapping(Model model) {
+		List<ProductVO> proList = proService.selectAll();
+		model.addAttribute("PRO_LIST", proList);
+		model.addAttribute("BODY", "PRODUCT");
 	}
 }
