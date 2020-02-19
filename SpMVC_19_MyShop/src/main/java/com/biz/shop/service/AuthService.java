@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.biz.shop.domain.Authorities;
 import com.biz.shop.domain.Users;
-import com.biz.shop.repository.AuthDao;
-import com.biz.shop.repository.UserDao;
+import com.biz.shop.persistence.AuthRepository;
+import com.biz.shop.persistence.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-	private final UserDao userDao;
-	private final AuthDao authDao;
+	private final UserRepository userDao;
+	private final AuthRepository authDao;
 	private final BCryptPasswordEncoder passEncoder;
 	
 	@Transactional

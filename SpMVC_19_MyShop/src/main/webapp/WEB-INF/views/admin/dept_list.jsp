@@ -9,7 +9,7 @@ white-space: nowrap;
 </style>
 <script>
 $(function() {
-	$(".dept_tr").click(function() {
+	$(".dept_tr_1").click(function() {
 		//let id=$(this).data("id") // attr("data-id")
 		//let c=$(this).attr("class")
 		
@@ -25,6 +25,25 @@ $(function() {
 		window.open('about:blank','_self').self.close()
 		//document.location.href="${rootPath}/admin/DEPTduct/update?id="+id
 		//document.location.href="${rootPath}/admin/dept/update/"+id
+	})
+	
+	var dept_call_func= function(key) {
+		var id=$(this).data("id")
+		if(key=="edit"){
+			document.location.href="${rootPath}/admin/dept/update/"+id
+		}else if(key=="delete"){
+			if(confirm("정말 삭제할까요?")){
+				document.location.href="${rootPath}/admin/dept/delete/"+id
+			}
+		}
+	}
+	$.contextMenu({
+		selector:".dept_tr",
+		items:{
+			"edit":{name:"거래처 수정",icon:"edit"},
+			"delete":{name:"거래처 삭제",icon:"delete"}
+		},
+		callback:dept_call_func
 	})
 })
 </script>

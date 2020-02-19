@@ -1,4 +1,4 @@
-package com.biz.shop.repository;
+package com.biz.shop.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,6 +16,6 @@ import com.biz.shop.domain.ProductVO;
  * int			Integer
  * char			Character
  */
-public interface ProductDao extends JpaRepository<ProductVO, Long> {
+public interface ProductRepository extends JpaRepository<ProductVO, Long> {
 	//CUD 기본 method가 준비 되어 있다.
 }
