@@ -21,8 +21,13 @@ $(function() {
 </script>
 </head>
 <body>
-<section>
-	<table>
+<section class="container">
+<p><a href="${rootPath }/">
+홈으로
+</a></p>
+</section>
+<section class="container">
+	<table  class="table table-striped">
 		<tr>
 		<th>상품이름</th>
 		<th>가격</th>
