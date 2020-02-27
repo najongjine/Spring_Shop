@@ -16,7 +16,7 @@
 	만약 level INFO로 설정했다
 	INFO 이하의 메세지는 모두 무시  -->
 	
-	<root level="INFO">
+	<root level="DEBUG">
 		<appender-ref ref="myConsole"/>
 	</root>
 </configuration>

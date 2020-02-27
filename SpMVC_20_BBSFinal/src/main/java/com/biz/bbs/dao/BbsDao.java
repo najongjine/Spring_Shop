@@ -13,6 +13,7 @@ public interface BbsDao {
 	
 	@Select("select * from tbl_bbs where b_id=#{b_id}")
 	public BBsVO findById(long b_id);
+	
 	public List<BBsVO> findBySubject(String b_subject);
 	public List<BBsVO> findByWriter(String b_writer);
 	public int insert(BBsVO bbsVO);

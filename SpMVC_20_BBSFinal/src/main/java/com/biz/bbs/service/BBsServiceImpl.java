@@ -1,8 +1,11 @@
 package com.biz.bbs.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Service;
 
 import com.biz.bbs.dao.BbsDao;
@@ -42,8 +45,12 @@ public class BBsServiceImpl implements BBsService{
 
 	@Override
 	public int insert(BBsVO bbsVO) {
-		// TODO Auto-generated method stub
-		return bbsDao.insert(bbsVO);
+		// 작성일자 현재 저장하는 날짜로 세팅을 하자.
+		LocalDateTime ldt=LocalDateTime.now();
+		DateTimeFormatter df=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		bbsVO.setB_date_time(ldt.format(df).toString());
+		int ret=bbsDao.insert(bbsVO);
+		return ret;
 	}
 
 	@Override
@@ -54,7 +61,10 @@ public class BBsServiceImpl implements BBsService{
 
 	@Override
 	public int update(BBsVO bbsVO) {
-		// TODO Auto-generated method stub
+		// 작성일자 현재 저장하는 날짜로 세팅을 하자.
+		LocalDateTime ldt=LocalDateTime.now();
+		DateTimeFormatter df=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		bbsVO.setB_date_time(ldt.format(df).toString());
 		return bbsDao.update(bbsVO);
 	}
 
