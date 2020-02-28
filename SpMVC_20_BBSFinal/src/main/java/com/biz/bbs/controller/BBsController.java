@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.biz.bbs.domain.BBsVO;
+import com.biz.bbs.domain.CommentVO;
 import com.biz.bbs.service.BBsService;
+import com.biz.bbs.service.CommentService;
 import com.biz.bbs.service.FileService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class BBsController {
 	 */
 	private final BBsService bbsService;
 	private final FileService fileService;
+	private final CommentService commentService;
 	
 	@RequestMapping(value = "/list",method=RequestMethod.GET)
 	public String list(Model model) {
@@ -114,15 +117,20 @@ public class BBsController {
 	
 	@RequestMapping(value = "/detail",method=RequestMethod.GET)
 	public String view(BBsVO bbsVO,Model model) {
+		//원글 게시글 찾기
 		bbsVO=bbsService.findById(bbsVO.getB_id());
 		model.addAttribute("BBS", bbsVO);
+		
+		long c_b_id=bbsVO.getB_id();
+		//원글에 대한 댓글들 찾기
+		List<CommentVO> cmtList=commentService.findByBId(bbsVO.getB_id());
+		model.addAttribute("CMT_LIST", cmtList);
 		return "bbs_view";
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/image_up",method=RequestMethod.POST,produces = "text/html;charset=utf-8")
 	public String fileUp(MultipartFile upFile) {
-		log.debug("!!! 파일업: "+upFile.getOriginalFilename());
 		String retFileName=fileService.fileUp(upFile);
 		
 		if(retFileName==null) {

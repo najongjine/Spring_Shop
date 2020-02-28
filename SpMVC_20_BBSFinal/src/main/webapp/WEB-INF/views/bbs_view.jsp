@@ -10,6 +10,40 @@
 <%@ include file="/WEB-INF/views/include/include-head.jsp"%>
 	<script type="text/javascript">
 	$(function() {
+		//$(".cmt-item").click(function() {
+		$(document).on("click",".cmt-item",function(){
+			let id=$(this).data("id")
+			return false
+		})
+		$(document).on("click",".cmt-item-del",function(event){
+			if(!confirm("커멘트를 삭제할까요?")){
+				return false;
+			}
+		
+			//event.stopPropagation()
+			/*
+			현재 자신을 감싸고 있는 가장 가까운 div을 찾아라
+			*/
+			let c_id=$(this).parent("div").data("id")
+			$.ajax({
+				url:"${rootPath}/comment/delete",
+				data:{
+					c_id:c_id,
+					b_id:"${BBS.b_id}"
+				},
+				
+				type:"POST",
+				success:function(result){
+					$(".cmt-list").html(result)
+				},
+				error:function(){
+					alert("서버 통신 오류")
+				}
+			})
+			
+			return false
+		})
+		
 		$("button").click(function() {
 			let txt=$(this).text()
 			if(txt=='수정'){
@@ -31,7 +65,23 @@
 					}
 					
 			}
-			else if(txt=='저장'){
+			else if(txt=='답글달기'){
+				/*
+				ajax를 사용해서 form에 담긴 데이터를 controller로 전송
+				*/
+				var formData=$("form").serialize()
+				$.ajax({
+					url:"${rootPath}/comment/insert",
+					data:formData,
+					type:"POST",
+					success:function(result){
+						$(".cmt-list").html("")
+						$(".cmt-list").html(result)
+					},
+					error: function() {
+						alert("서버와 통신 오류")
+					}
+				})
 				return false
 			}
 			else{
@@ -39,24 +89,6 @@
 			}
 		})
 		
-		/* 내가만든거
-		let b_id=${BBS.b_id}
-		$(".btn-danger").click(function() {
-			if(confirm("게시글을 삭제할까요?")){
-				$.post("${rootPath}/delete",
-						{b_id:b_id},
-						function(result){
-							if(parseInt(result)>0){
-								alert("삭제성공")
-								document.location.replace("${rootPath}/list")
-							} else{
-								alert("삭제 실패")
-							}
-						})
-				return false
-			}
-			
-		}) */
 	})
 	</script>
 	
@@ -100,11 +132,17 @@
 </section>
 <hr/>
 
+<section class="container-fluid p-4 cmt-list">
+<%@ include file="/WEB-INF/views/comment_list.jsp" %>
+</section>
+<hr/>
+
 <section class="contrainer-fluid">
-<form>
-<input name="b_writer" placeholder="작성자" class="form-control">
-<input name="b_content" placeholder="내용" class="form-control">
-<button class="float-right">답글달기</button>
+<form action="${rootPath }/comment/insert" method="post">
+<input name="c_b_id" type="hidden" value="${BBS.b_id }">
+<input name="c_writer" placeholder="작성자" class="form-control">
+<input name="c_subject" placeholder="내용" class="form-control">
+<button type="button" class="btn float-right">답글달기</button>
 </form>
 </section>
 </body>

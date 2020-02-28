@@ -18,10 +18,22 @@
 
 <!-- mapperLocations: xml mapper를 사용하기 위한 설정 -->
 <!-- typeAliasePackage: vo 클래스를 자동으로 type 설정하기 위하여 -->
+<!--mapUnderscoreToCamelCase:= 테이블 칼럼 이름은 snake-case로 작성하고
+vo 클래스의 필드변수는 camel-case로 작성했을때 이름 자동 변환을 통해 table과 연동되게 하는 옵션이다.
+우리 프로젝트는 vo클래스 필드변수를 snake-case로 작성하므로 이 옵션을 false로 설정해둔다.  -->
 <bean class="org.mybatis.spring.SqlSessionFactoryBean">
 	<property name="dataSource" ref="oracleDS"></property>
 	<property name="mapperLocations" value="/WEB-INF/spring/mybatis/mapper/*-mapper.xml"></property>
 	<property name="typeAliasesPackage" value="com.biz.bbs.domain"></property>
+	<property name="configuration">
+		<bean class="org.apache.ibatis.session.Configuration">
+			<property name="jdbcTypeForNull" value="VARCHAR"></property>
+			<property name="mapUnderscoreToCamelCase" value="false"></property>
+			<property name="cacheEnabled" value="true"></property>
+			<property name="defaultExecutorType" value="REUSE"></property>
+			<property name="logPrefix" value="MY_BATIS"></property>
+		</bean>
+	</property>
 </bean>
 
 <!-- transaction 자동화 설정. template 대신 더 좋은거 씀 -->
@@ -31,5 +43,5 @@
 </bean>
 
 <!-- Annotation 방식의 query 사용을 위한 설정 -->
-<mybatis-spring:scan base-package="com.biz.bbs.dao"/>
+<mybatis-spring:scan base-package="com.biz.bbs.repository"/>
 </beans>
