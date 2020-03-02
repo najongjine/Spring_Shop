@@ -70,4 +70,10 @@ public class CommentController {
 		model.addAttribute("b_id", b_id);
 		return "redirect:/comment/list";
 	}
+	
+	@RequestMapping(value = "/reply",method=RequestMethod.GET)
+	public String reply(CommentVO cmtVO,Model model) {
+		model.addAttribute("CMT", cmtVO);
+		return "comment_write";
+	}
 }

@@ -8,8 +8,12 @@ import org.apache.ibatis.annotations.Select;
 import com.biz.bbs.domain.BBsVO;
 
 public interface BbsDao {
-	@Select("select * from tbl_bbs order by b_date_time desc")
+	//원글만 리스트로 뽑음
+	@Select("select * from tbl_bbs where b_p_id=0 order by b_date_time desc")
 	public List<BBsVO> selectAll();
+	
+	@Select("select * from tbl_bbs where b_p_id=#{b_id} order by b_date_time desc")
+	public List<BBsVO> findByPId(long b_p_id);
 	
 	@Select("select * from tbl_bbs where b_id=#{b_id}")
 	public BBsVO findById(long b_id);
