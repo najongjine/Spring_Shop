@@ -4,6 +4,27 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.biz.bbs.repository.CommentDao">
+	<!-- lpad쪽 설명:
+	매개변수 1: 각 레코드 첫 문장에 re:를 붙여라
+	매개변수 2: level==반복횟수, 뒤의 3은 총 additional 문자열(추가로 붙일)
+	  level-x 만큼 반복하여 추가 문자열을 붙여라.
+	매개변수 3: 추가로 붙일 문자열
+	
+	start with: top level 설정후 리스트 쭉 가져옴.
+	connect by prior: 반복문+조건 합친 쿼리문.
+	order siblings: connect by prior 로 나온 결과값을 기준으로 정렬하라.
+	 -->
+	<select id="findByBidLevel" resultType="commentVO">
+		select
+		c_id,c_p_id,c_b_id,c_writer,
+		LPAD('re:',(level-1)*3,'re:') || c_subject as c_subject
+		from tbl_comment
+		where c_b_id=#{c_b_id}
+		start with c_p_id=0
+		CONNECT by PRIOR c_id=c_p_id
+		order SIBLINGS by c_p_id
+	</select>
+
 	<insert id="insert" parameterType="commentVO">
 		insert into tbl_comment(
 		C_ID,

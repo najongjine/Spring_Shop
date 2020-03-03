@@ -2,6 +2,8 @@ package com.biz.bbs.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +18,10 @@ import com.biz.bbs.service.BBsService;
 import com.biz.bbs.service.CommentService;
 import com.biz.bbs.service.FileService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-@RequiredArgsConstructor
 public class BBsController {
 	/*
 	 * 현재 컨트롤러와 bbsService*는 bbsService 인터페이스를 거쳐서 연결이 되어있다.
@@ -33,9 +33,16 @@ public class BBsController {
 	 * 결합도를 낮추는 결과가 된다.
 	 * 결합도(모듈간의 의존도. 모듈 작성의 유연성과 관련)는 낮게, 응집도는 높은 모듈간 연계가 좋은 설계.
 	 */
-	private final BBsService bbsService;
-	private final FileService fileService;
-	private final CommentService commentService;
+	@Autowired
+	@Qualifier("bbsV2")
+	private BBsService bbsService;
+	
+	@Autowired
+	private FileService fileService;
+	
+	@Autowired
+	@Qualifier("cmtV2")
+	private CommentService commentService;
 	
 	@RequestMapping(value = "/list",method=RequestMethod.GET)
 	public String list(Model model) {

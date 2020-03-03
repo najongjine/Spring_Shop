@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Select;
 import com.biz.bbs.domain.BBsVO;
 
 public interface BbsDao {
+	public List<BBsVO> selectLevel();
+	
 	//원글만 리스트로 뽑음
 	@Select("select * from tbl_bbs where b_p_id=0 order by b_date_time desc")
 	public List<BBsVO> selectAll();

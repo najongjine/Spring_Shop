@@ -13,11 +13,15 @@ import com.biz.bbs.repository.CommentDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+//@Service("cmtV1")
 @Slf4j
-@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
-	private final CommentDao cmtDao;
+	protected final CommentDao cmtDao;
+
+	public CommentServiceImpl(CommentDao cmtDao) {
+		super();
+		this.cmtDao = cmtDao;
+	}
 
 	@Override
 	public List<CommentVO> selectAll() {

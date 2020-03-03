@@ -18,7 +18,7 @@ import com.biz.bbs.repository.BbsDao;
  * 중간에 데이터 fetch가 누락되는것을 막을수 있다.
  */
 @Transactional
-@Service
+// @Service("bbsV1")
 public class BBsServiceImpl implements BBsService{
 	protected final BbsDao bbsDao;
 	
