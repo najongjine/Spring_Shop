@@ -24,12 +24,10 @@ public class HomeController {
 	private final TourService tourService;
 	
 	//,produces = "text/json;charset=UTF-8"
-	@ResponseBody
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public List<FishAreaBasedVO> home(Locale locale, Model model) throws URISyntaxException {
+	public String home(Locale locale, Model model) throws URISyntaxException {
 		
-		
-		return null;
+		 return "fishing/fishMain";
 	}
 	
 }

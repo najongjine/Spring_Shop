@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.biz.tour.domain.userwater.FishUserWaterPicsVO;
+import com.biz.tour.service.userwater.UserWaterPicsService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class FileUploadToServerService {
+	private final UserWaterPicsService uwPicsService;
 	// servlet-context.xml에 설정된 파일 저장 경로 정보를 가져와서 사용하기
 		private final String filePath;
 		
@@ -35,16 +39,6 @@ public class FileUploadToServerService {
 		}
 		
 		public String fileUp(MultipartFile uploadedFile) {
-			//파일이름을 추출(그림.jpg)
-			String originalFileName=uploadedFile.getOriginalFilename();
-			
-			//UUID가 부착된 새로운 이름을 생성(UUID그림.jpg)
-			String strUUID=UUID.randomUUID().toString();
-			strUUID+=originalFileName;
-			
-			//filePath와 변경된 파일이름을 결합하여 empty 파일 객체를 생성
-			File serverFile=new File(filePath,strUUID);
-			
 			//upload할 filePath가 있는지 확인을 하고
 			//없으면 폴더를 생성
 			File dir=new File(filePath);
@@ -52,9 +46,25 @@ public class FileUploadToServerService {
 				dir.mkdirs();
 			}
 			
+			//파일이름을 추출(그림.jpg)
+			String originalFileName=uploadedFile.getOriginalFilename();
+			
+			//UUID가 부착된 새로운 이름을 생성(UUID그림.jpg)
+			String strUUID=UUID.randomUUID().toString();
+			String UploadedFName=strUUID+originalFileName;
+			
+			//filePath와 변경된 파일이름을 결합하여 empty 파일 객체를 생성
+			File serverFile=new File(filePath,UploadedFName);
+			
 			//upFile을 serverFile 이름으로 복사 수행 
 			try {
 				uploadedFile.transferTo(serverFile);
+				FishUserWaterPicsVO uwPicsVO=new FishUserWaterPicsVO();
+				long fk=uwPicsService.lastInsertID();
+				uwPicsVO.setUfwp_fk(fk);
+				uwPicsVO.setUfwp_originalFName(originalFileName);
+				uwPicsVO.setUfwp_uploadedFName(UploadedFName);
+				uwPicsService.insert(uwPicsVO);
 				return strUUID;
 			} catch (IllegalStateException | IOException e) {
 				// TODO Auto-generated catch block
