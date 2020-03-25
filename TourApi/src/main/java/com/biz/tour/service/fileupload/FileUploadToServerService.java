@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.biz.tour.domain.userwater.FishUserWaterPicsVO;
 import com.biz.tour.service.userwater.UserWaterPicsService;
+import com.biz.tour.service.userwater.UserWaterService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FileUploadToServerService {
 	private final UserWaterPicsService uwPicsService;
+	private final UserWaterService uwService;
+	// 바다낚시 사진 테이블 선언해 줘야함
+	
 	// servlet-context.xml에 설정된 파일 저장 경로 정보를 가져와서 사용하기
 		private final String filePath;
 		
@@ -27,18 +31,17 @@ public class FileUploadToServerService {
 		 * 변경된 이름으로 서버의 filePath에 저장하고
 		 * 변경된 파일이름을 return
 		 */
-		public String filesUp(MultipartHttpServletRequest uploaded_files) {
-			if(uploaded_files==null || uploaded_files.getFiles("uploaded_files").size()<=0) {
-				return null;
-			}
+		public String filesUp(MultipartHttpServletRequest uploaded_files, String whichTable) {
 			//uploaded_files.getFiles("uploaded_files") 이부분은 jsp form input 에서 지정한 name과 동일해야함
 			for(MultipartFile file:uploaded_files.getFiles("uploaded_files")) {
-				fileUp(file);
+				if(file.isEmpty()) return null;
+				fileUp(file,whichTable);
 			}
 			return null;
 		}
 		
-		public String fileUp(MultipartFile uploadedFile) {
+		public String fileUp(MultipartFile uploadedFile, String whichTable) {
+			
 			//upload할 filePath가 있는지 확인을 하고
 			//없으면 폴더를 생성
 			File dir=new File(filePath);
@@ -59,12 +62,18 @@ public class FileUploadToServerService {
 			//upFile을 serverFile 이름으로 복사 수행 
 			try {
 				uploadedFile.transferTo(serverFile);
-				FishUserWaterPicsVO uwPicsVO=new FishUserWaterPicsVO();
-				long fk=uwPicsService.lastInsertID();
-				uwPicsVO.setUfwp_fk(fk);
-				uwPicsVO.setUfwp_originalFName(originalFileName);
-				uwPicsVO.setUfwp_uploadedFName(UploadedFName);
-				uwPicsService.insert(uwPicsVO);
+				
+				// water 이면 wtarePics 테이블에 저장
+				if(whichTable.equalsIgnoreCase("water")) {
+					FishUserWaterPicsVO uwPicsVO=new FishUserWaterPicsVO();
+					long fk=uwService.getMaxID();
+					uwPicsVO.setUfp_fk(fk);
+					uwPicsVO.setUfp_originalFName(originalFileName);
+					uwPicsVO.setUfp_uploadedFName(UploadedFName);
+					int ret=uwPicsService.insert(uwPicsVO);
+					log.debug("!!! pic upload ret :"+ret);
+				}
+				
 				return strUUID;
 			} catch (IllegalStateException | IOException e) {
 				// TODO Auto-generated catch block

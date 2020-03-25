@@ -1,5 +1,7 @@
 package com.biz.tour.service.userwater;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.biz.tour.dao.userwater.FishUserWaterPicsDao;
@@ -14,12 +16,18 @@ import lombok.extern.slf4j.Slf4j;
 public class UserWaterPicsService {
 	private final FishUserWaterPicsDao waterpicsDao;
 	
-	public long lastInsertID() {
-		return waterpicsDao.last_insert_id();
-	}
-	
 	public int insert(FishUserWaterPicsVO waterPicsVO) {
 		int ret=waterpicsDao.insert(waterPicsVO);
 		return ret;
+	}
+
+	public List<FishUserWaterPicsVO> findByFK(Long fk) {
+		// TODO Auto-generated method stub
+		return waterpicsDao.findByFk(fk);
+	}
+
+	public int deleteById(Long ufp_id) {
+		// TODO Auto-generated method stub
+		return waterpicsDao.deleteById(ufp_id);
 	}
 }

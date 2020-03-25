@@ -11,23 +11,28 @@
 		uf_username,
 		uf_title,
 		uf_date,
+		uf_addr1,
+		uf_addr2,
 		uf_text
 		) values (
 		#{uf_username,jdbcType=VARCHAR},
 		#{uf_title,jdbcType=VARCHAR},
 		#{uf_date,jdbcType=VARCHAR},
+		#{uf_addr1,jdbcType=VARCHAR},
+		#{uf_addr2,jdbcType=VARCHAR},
 		#{uf_text,jdbcType=VARCHAR}
 		)
 	</insert>
 	<update id="update" parameterType="fishUserWaterVO">
-		update tbl_userfish_water set
-		B_WRITER=#{b_writer,jdbcType=VARCHAR},
-		B_SUBJECT
-		=#{b_subject,jdbcType=VARCHAR},
-		B_CONTENT
-		=#{b_content,jdbcType=VARCHAR},
-		B_FILE=#{b_file,jdbcType=VARCHAR}
-		where
-		B_ID =#{b_id,jdbcType=VARCHAR}
+		UPDATE
+		tbl_userfish_water
+		SET
+		uf_username = #{uf_username},
+		uf_title = #{uf_title},
+		uf_date = #{uf_date},
+		uf_addr1 = #{uf_addr1},
+		uf_addr2 = #{uf_addr2},
+		uf_text = #{uf_text}
+		WHERE uf_id = #{uf_id}
 	</update>
 </mapper> 

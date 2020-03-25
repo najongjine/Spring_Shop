@@ -14,9 +14,11 @@ import lombok.ToString;
 @ToString
 @Builder
 public class FishUserWaterCommentVO {
-	private long ufw_id ;// AUTO_INCREMENT	PRIMARY KEY,
-    private String ufw_username;// nVARCHAR(50),
-    private String ufw_title;// nVARCHAR(150),
-    private String ufw_date;// nVARCHAR(50),
-    private String ufw_text;// nVARCHAR(2000)
+	private long ufc_id ;// AUTO_INCREMENT	PRIMARY KEY,
+    private long ufc_pid;// nVARCHAR(50),
+    private long ufc_fk;// nVARCHAR(150),
+    private String ufc_username;// nVARCHAR(50),
+    private String ufc_title;// nVARCHAR(2000)
+    private String ufc_date;
+    private String ufc_text;
 }

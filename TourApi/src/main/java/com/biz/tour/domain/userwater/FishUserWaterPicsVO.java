@@ -14,8 +14,8 @@ import lombok.ToString;
 @ToString
 @Builder
 public class FishUserWaterPicsVO {
-	private long ufwp_id;// bigint AUTO_INCREMENT	PRIMARY KEY,
-	private long ufwp_fk;// nVARCHAR(50),
-	private String ufwp_originalFName;// nVARCHAR(50),
-	private String ufwp_uploadedFName;// nVARCHAR(150)
+	private long ufp_id;// bigint AUTO_INCREMENT	PRIMARY KEY,
+	private long ufp_fk;// nVARCHAR(50),
+	private String ufp_originalFName;// nVARCHAR(50),
+	private String ufp_uploadedFName;// nVARCHAR(150)
 }

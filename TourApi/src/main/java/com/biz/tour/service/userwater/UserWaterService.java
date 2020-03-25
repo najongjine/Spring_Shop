@@ -16,14 +16,23 @@ public class UserWaterService {
 	private final FishUserWaterDao waterDao;
 	private final GetCurrentDateService curTimeService;
 	
-	public long lastInsertID() {
-		return waterDao.last_insert_id();
-	}
-	
 	public int insert(FishUserWaterVO waterVO) {
 		String curTime=curTimeService.getCurDate();
-		waterVO.setUfwc_date(curTime);
+		waterVO.setUf_date(curTime);
 		int ret=waterDao.insert(waterVO);
 		return ret;
+	}
+	
+	public long getMaxID() {
+		return waterDao.getMaxID();
+	}
+
+	public FishUserWaterVO findById(Long uf_id) {
+		// TODO Auto-generated method stub
+		return waterDao.findById(uf_id);
+	}
+
+	public int update(FishUserWaterVO userVO) {
+		return waterDao.update(userVO);
 	}
 }
