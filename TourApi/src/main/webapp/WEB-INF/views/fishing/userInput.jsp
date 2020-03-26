@@ -25,7 +25,7 @@
 				<b>uf_addr2:</b> <input name="uf_addr2" value="${userVO.uf_addr2 }">
 			</p>
 			<p>
-				<b>content:</b> <input name="uf_text" value="${userVO.uf_text }">
+				<b>content:</b> <textarea class="summernote" name="uf_text" value="${userVO.uf_text }"></textarea>
 			</p>
 			<p>
 				<b>pictures:</b> <input type="file" multiple="multiple" name="uploaded_files">

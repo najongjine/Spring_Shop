@@ -22,63 +22,98 @@ public class FileUploadToServerService {
 	private final UserWaterPicsService uwPicsService;
 	private final UserWaterService uwService;
 	// 바다낚시 사진 테이블 선언해 줘야함
-	
+
 	// servlet-context.xml에 설정된 파일 저장 경로 정보를 가져와서 사용하기
-		private final String filePath;
-		
-		/*
-		 * 원래 파일이름을 UUID 부착된 파일이름으로 변경하고
-		 * 변경된 이름으로 서버의 filePath에 저장하고
-		 * 변경된 파일이름을 return
-		 */
-		public String filesUp(MultipartHttpServletRequest uploaded_files, String whichTable) {
-			//uploaded_files.getFiles("uploaded_files") 이부분은 jsp form input 에서 지정한 name과 동일해야함
-			for(MultipartFile file:uploaded_files.getFiles("uploaded_files")) {
-				if(file.isEmpty()) return null;
-				fileUp(file,whichTable);
-			}
-			return null;
+	private final String filePath;
+
+	/*
+	 * 원래 파일이름을 UUID 부착된 파일이름으로 변경하고 변경된 이름으로 서버의 filePath에 저장하고 변경된 파일이름을 return
+	 */
+	public String filesUp(MultipartHttpServletRequest uploaded_files, String whichTable) {
+		// uploaded_files.getFiles("uploaded_files") 이부분은 jsp form input 에서 지정한 name과
+		// 동일해야함
+		for (MultipartFile file : uploaded_files.getFiles("uploaded_files")) {
+			if (file.isEmpty())
+				return null;
+			fileUp(file, whichTable);
 		}
-		
-		public String fileUp(MultipartFile uploadedFile, String whichTable) {
-			
-			//upload할 filePath가 있는지 확인을 하고
-			//없으면 폴더를 생성
-			File dir=new File(filePath);
-			if(dir.exists()) {
-				dir.mkdirs();
-			}
-			
-			//파일이름을 추출(그림.jpg)
-			String originalFileName=uploadedFile.getOriginalFilename();
-			
-			//UUID가 부착된 새로운 이름을 생성(UUID그림.jpg)
-			String strUUID=UUID.randomUUID().toString();
-			String UploadedFName=strUUID+originalFileName;
-			
-			//filePath와 변경된 파일이름을 결합하여 empty 파일 객체를 생성
-			File serverFile=new File(filePath,UploadedFName);
-			
-			//upFile을 serverFile 이름으로 복사 수행 
-			try {
-				uploadedFile.transferTo(serverFile);
-				
-				// water 이면 wtarePics 테이블에 저장
-				if(whichTable.equalsIgnoreCase("water")) {
-					FishUserWaterPicsVO uwPicsVO=new FishUserWaterPicsVO();
-					long fk=uwService.getMaxID();
-					uwPicsVO.setUfp_fk(fk);
-					uwPicsVO.setUfp_originalFName(originalFileName);
-					uwPicsVO.setUfp_uploadedFName(UploadedFName);
-					int ret=uwPicsService.insert(uwPicsVO);
-					log.debug("!!! pic upload ret :"+ret);
-				}
-				
-				return strUUID;
-			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		return null;
+	}
+
+	public String fileUp(MultipartFile uploadedFile, String whichTable) {
+		if (uploadedFile.isEmpty())
 			return null;
+
+		// upload할 filePath가 있는지 확인을 하고
+		// 없으면 폴더를 생성
+		File dir = new File(filePath);
+		if (dir.exists()) {
+			dir.mkdirs();
 		}
+
+		// 파일이름을 추출(그림.jpg)
+		String originalFileName = uploadedFile.getOriginalFilename();
+
+		// UUID가 부착된 새로운 이름을 생성(UUID그림.jpg)
+		String strUUID = UUID.randomUUID().toString();
+		String UploadedFName = strUUID + originalFileName;
+
+		// filePath와 변경된 파일이름을 결합하여 empty 파일 객체를 생성
+		File serverFile = new File(filePath, UploadedFName);
+
+		// upFile을 serverFile 이름으로 복사 수행
+		try {
+			uploadedFile.transferTo(serverFile);
+
+			// water 이면 wtarePics 테이블에 저장
+			if (whichTable.equalsIgnoreCase("water")) {
+				FishUserWaterPicsVO uwPicsVO = new FishUserWaterPicsVO();
+				long fk = uwService.getMaxID();
+				uwPicsVO.setUfp_fk(fk);
+				uwPicsVO.setUfp_originalFName(originalFileName);
+				uwPicsVO.setUfp_uploadedFName(UploadedFName);
+				int ret = uwPicsService.insert(uwPicsVO);
+				log.debug("!!! pic upload ret :" + ret);
+			}
+
+			return UploadedFName;
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	} // 테이블에 이미지 저장
+
+	public String fileUp(MultipartFile uploadedFile) {
+		if (uploadedFile.isEmpty())
+			return null;
+
+		// upload할 filePath가 있는지 확인을 하고
+		// 없으면 폴더를 생성
+		File dir = new File(filePath);
+		if (dir.exists()) {
+			dir.mkdirs();
+		}
+
+		// 파일이름을 추출(그림.jpg)
+		String originalFileName = uploadedFile.getOriginalFilename();
+
+		// UUID가 부착된 새로운 이름을 생성(UUID그림.jpg)
+		String strUUID = UUID.randomUUID().toString();
+		String UploadedFName = strUUID + originalFileName;
+
+		// filePath와 변경된 파일이름을 결합하여 empty 파일 객체를 생성
+		File serverFile = new File(filePath, UploadedFName);
+
+		// upFile을 serverFile 이름으로 복사 수행
+		try {
+			uploadedFile.transferTo(serverFile);
+
+			return UploadedFName;
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

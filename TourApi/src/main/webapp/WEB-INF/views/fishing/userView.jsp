@@ -19,8 +19,24 @@ $(function() {
 			$(".comments").html(result)
 		}
 	})
-	$("#commentSubmit").click(function() {
-		var formData=$("form").serialize()
+	
+	//원글에서 댓글쓴거 보내기
+	$(document).on("click","#commentSubmit",function(){
+		var formData=$("form#pcomment").serialize()
+		$.ajax({
+			url:"${rootPath}/fishUserWater/comments",
+			data:formData,
+			type:"POST",
+			success:function(result){
+				$(".comments").html("")
+				$(".comments").html(result)
+			}
+		})
+	})
+	
+	//댓글의 댓글에서 쓴거 보내기
+	$(document).on("click","#btnReplyReply",function(){
+		var formData=$("form.replyreply").serialize()
 		$.ajax({
 			url:"${rootPath}/fishUserWater/comments",
 			data:formData,
@@ -72,13 +88,13 @@ $(function() {
 	<section class="commentInput">
 	<br/>
 	<hr/>
-	<form method="post" action="${rootPath }/">
+	<form method="post" id="pcomment">
 	<p>
 		<input name="ufc_fk" value="${userVO.uf_id }" type="hidden">
 	</p>
 	<p>
 		<b>comment: </b>
-		<input name="ufc_text" id="ufc_text">
+		<textarea  class="summernote" name="ufc_text" id="ufc_text" rows="" cols=""></textarea>
 	</p>
 	<p>
 		<button id="commentSubmit" type="button">submit comment</button>

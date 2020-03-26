@@ -32,6 +32,17 @@ public class FishUserController {
 	private final FileUploadToServerService fUploadService;
 	private final UserWaterCommentService uWCommentService;
 	
+	@RequestMapping(value = "/findAndShow",method=RequestMethod.GET)
+	public String findAndShow(@RequestParam(value="searchOption", required = false,
+			defaultValue = "titleSearch") String searchOption
+			,@RequestParam(value="inputStr", required = false,
+					defaultValue = "") String inputStr, Model model) {
+		if(searchOption.equalsIgnoreCase("titleSearch")) {
+			
+		}
+		return null;
+	}
+	
 	@RequestMapping(value = "/waterInsert",method=RequestMethod.GET)
 	public String insert(Model model) {
 		FishUserWaterVO userVO=new FishUserWaterVO();
@@ -139,5 +150,22 @@ public class FishUserController {
 		List<FishUserWaterCommentVO> commentList=uWCommentService.findByFk(commentVO.getUfc_fk());
 		model.addAttribute("commentList", commentList);
 		return "fishing/userComment";
+	}
+	
+	@RequestMapping(value = "/replyForm",method=RequestMethod.GET)
+	public String replyForm(@RequestParam("ufc_pid") String strPid, @RequestParam("ufc_fk") String strFK, Model model) {
+		long ufc_pid=-1;
+		long ufc_fk=-1;
+		try {
+			ufc_pid=Long.valueOf(strPid);
+			ufc_fk=Long.valueOf(strFK);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		FishUserWaterCommentVO vo=new FishUserWaterCommentVO();
+		vo.setUfc_pid(ufc_pid);
+		vo.setUfc_fk(ufc_fk);
+		model.addAttribute("vo", vo);
+		return "fishing/userReplyForm";
 	}
 }

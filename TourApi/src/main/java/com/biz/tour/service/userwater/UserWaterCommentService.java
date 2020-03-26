@@ -41,12 +41,12 @@ public class UserWaterCommentService {
 		// pid 0 인 댓글 하나 기준으로 child 댓글 heriarchy 를 만들 list
 		List<FishUserWaterCommentVO> retList=new ArrayList<FishUserWaterCommentVO>();
 		if(depth>0) {
-			String c_subject="&nbsp;";
+			String c_header="&nbsp;";
 			for(int i=0;i<depth;i++) {
-				c_subject+=" re: ";
+				c_header+=" re: ";
 			}
-			c_subject+=cmtVO.getUfc_title();
-			cmtVO.setUfc_title(c_subject);
+			String moddedText=c_header+cmtVO.getUfc_text();
+			cmtVO.setUfc_title(moddedText);
 		}
 		// 매개 변수로 받은 댓글vo(부모)vo를 list에 먼저 추가 시켜줌
 		retList.add(cmtVO);
