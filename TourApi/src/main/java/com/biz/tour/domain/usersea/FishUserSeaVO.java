@@ -1,4 +1,4 @@
-package com.biz.tour.domain.userwater;
+package com.biz.tour.domain.usersea;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
-public class FishUserWaterVO {
+public class FishUserSeaVO {
 	private long uf_id;// bigint AUTO_INCREMENT	PRIMARY KEY,
 	private long uf_username;// nVARCHAR(50),
 	private String uf_title;// nVARCHAR(50),
@@ -24,6 +24,6 @@ public class FishUserWaterVO {
 	private String uf_addr2;
 	private String uf_text;// nVARCHAR(2000)
 	
-	private List<FishUserWaterPicsVO> picsList;
+	private List<FishUserSeaPicsVO> picsList;
 	private String mainPic;
 }

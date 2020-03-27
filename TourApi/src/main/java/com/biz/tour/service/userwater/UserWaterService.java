@@ -1,5 +1,7 @@
 package com.biz.tour.service.userwater;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.biz.tour.dao.userwater.FishUserWaterDao;
@@ -34,5 +36,15 @@ public class UserWaterService {
 
 	public int update(FishUserWaterVO userVO) {
 		return waterDao.update(userVO);
+	}
+
+	public List<FishUserWaterVO> findByTitle(String inputStr, int pageno, int itemLimit) {
+		// TODO Auto-generated method stub
+		return waterDao.findByTitle(inputStr,pageno,itemLimit);
+	}
+
+	public List<FishUserWaterVO> findAll(int pageno, int itemLimit) {
+		// TODO Auto-generated method stub
+		return waterDao.findAll(pageno,itemLimit);
 	}
 }

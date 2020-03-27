@@ -11,10 +11,10 @@
 <body>
 	<%@ include file="/WEB-INF/views/include/include-header.jsp"%>
 	<section>
-	<a href="${rootPath }/fish/water">
+	<a href="${rootPath }/fish/water?searchOption="" ">
 		<p>Water Fishing</p>
 	</a>
-	<a href="${rootPath }/fish/sea">
+	<a href="${rootPath }/fish/sea?searchOption="" ">
 		<p>Sea Fishing</p>
 	</a>
 	</section>

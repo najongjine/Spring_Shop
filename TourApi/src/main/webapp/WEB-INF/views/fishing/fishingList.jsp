@@ -7,10 +7,49 @@
 <head>
 <%@ include file="/WEB-INF/views/include/include-head.jsp"%>
 </head>
+<script type="text/javascript">
+$(function() {
+	var mode="${MODE}"
+	if(mode=="water"){
+		$.ajax({
+			url:"${rootPath}/fishUserWater/findAndShow",
+			
+			method:"GET",
+			success:function(result){
+				$(".userList").html("")
+				$(".userList").html(result)
+			}
+		})
+	}
+})
+</script>
 <body>
 	<%@ include file="/WEB-INF/views/include/include-header.jsp"%>
-	<section>
-		<c:forEach items="${fistList }" var="vo" varStatus="i">
+	<c:if test="${MODE=='water' }">
+	<section class="apiSearch">
+		<form method="get" action="${rootPath }/fish/water">
+			<label for="searchOption">검색</label> <select name="searchOption">
+				<option value="titleSearch">제목으로 검색</option>
+			</select> <input name="inputStr">
+			<button id="userSearch">검색</button>
+		</form>
+		<br />
+	</section>
+	</c:if>
+	<c:if test="${MODE=='sea' }">
+	<section class="apiSearch">
+		<form method="get" action="${rootPath }/fish/sea">
+			<label for="searchOption">검색</label> <select name="searchOption">
+				<option value="titleSearch">제목으로 검색</option>
+			</select> <input name="inputStr">
+			<button id="userSearch">검색</button>
+		</form>
+		<br />
+	</section>
+	</c:if>
+	
+	<section class="apiData">
+		<c:forEach items="${fishList }" var="vo" varStatus="i">
 			<div class="container">
 				<h2>${vo.title}</h2>
 				<div class="card" style="width: 400px">
@@ -26,6 +65,18 @@
 				<br>
 			</div>
 		</c:forEach>
+	</section>
+	<section class="apiPagi">
+		<c:if test="${MODE=='water' }">
+		<%@ include file="/WEB-INF/views/include/waterApiPagi.jsp" %>
+		</c:if>
+		<c:if test="${MODE=='sea' }">
+		<%@ include file="/WEB-INF/views/include/seaApiPagi.jsp" %>
+		</c:if>
+	</section>
+	<hr/>
+	<br/>
+	<section class="userList">
 	</section>
 </body>
 </html>

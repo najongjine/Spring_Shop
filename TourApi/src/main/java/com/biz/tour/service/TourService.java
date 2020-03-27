@@ -27,12 +27,14 @@ public class TourService {
 
 	// 지역기반 조회 query 용
 	// type은 sea | water
-	private String getAreaBasedQuery(String type) {
+	private String getAreaBasedQuery(String type,String strPageno) {
 		String queryString = "";
 		queryString = fishTourAreabasedURL;
 		queryString += "?serviceKey=i7aroZN%2BLlgjJucKmTqVpL8Kd%2Fi05AThPQDDLk5MLtoNU0HjelO4288BGCOhZRMOlbWpN34p8Wbyn0Ijz0WbWQ%3D%3D";
 		queryString += "&MobileOS=ETC";
 		queryString += "&MobileApp=Fisher";
+		queryString += "&pageNo="+strPageno;
+		queryString += "&numOfRows=10";
 
 		// 여기서부턴 국문과 영문 분류코드들이 다 다름
 		queryString += "&contentTypeId=75";// 영문 서비스 분류 타입
@@ -71,8 +73,8 @@ public class TourService {
 	}// end
 
 	// XML을 rest template으로 받아야 하는건 맞음
-	public List<FishAreaBasedVO> getFishingAreaBased(String urlLoc, String type) {
-		String strQuery = getAreaBasedQuery(type);
+	public List<FishAreaBasedVO> getFishingAreaBased(String urlLoc, String type, String strPageno) {
+		String strQuery = getAreaBasedQuery(type,strPageno);
 		HttpHeaders header = new HttpHeaders();
 		header.setAccept(Collections.singletonList(org.springframework.http.MediaType.APPLICATION_XML));
 		HttpEntity<String> entity = new HttpEntity<String>(header);

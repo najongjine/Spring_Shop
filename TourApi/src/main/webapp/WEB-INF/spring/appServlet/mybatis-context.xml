@@ -24,7 +24,8 @@
 		class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="myDS"></property>
 		<property name="typeAliasesPackage"
-			value="com.biz.tour.domain.userwater"></property>
+			value="com.biz.tour.domain"></property>
+
 		<property name="mapperLocations"
 			value="/WEB-INF/spring/appServlet/mybatis/*-mapper.xml"></property>
 	</bean>
@@ -33,5 +34,5 @@
 	<bean class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sessionFactory"></constructor-arg>
 	</bean>
-	<mybatis-spring:scan base-package="com.biz.tour.dao.userwater"/>
+	<mybatis-spring:scan base-package="com.biz.tour.dao"/>
 </beans>
