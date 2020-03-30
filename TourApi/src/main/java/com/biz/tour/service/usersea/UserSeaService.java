@@ -2,6 +2,8 @@ package com.biz.tour.service.usersea;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Service;
 
 import com.biz.tour.dao.usersea.FishUserSeaDao;
@@ -18,9 +20,11 @@ public class UserSeaService {
 	private final FishUserSeaDao seaDao;
 	private final GetCurrentDateService curTimeService;
 	
-	public int insert(FishUserSeaVO seaVO) {
+	public int insert(FishUserSeaVO seaVO,HttpSession session) {
+		String loggedName=(String)session.getAttribute("U_NAME");
 		String curTime=curTimeService.getCurDate();
 		seaVO.setUf_date(curTime);
+		seaVO.setUf_username(loggedName);
 		int ret=seaDao.insert(seaVO);
 		return ret;
 	}
@@ -46,5 +50,14 @@ public class UserSeaService {
 	public List<FishUserSeaVO> findAll(int pageno, int itemLimit) {
 		// TODO Auto-generated method stub
 		return seaDao.findAll(pageno,itemLimit);
+	}
+	
+	public int delete(long uf_id, String loggedName) {
+		// TODO Auto-generated method stub
+		FishUserSeaVO userVO=seaDao.findById(uf_id);
+		if(!userVO.getUf_username().equals(loggedName)) {
+			return -1;
+		}
+		return seaDao.delete(uf_id);
 	}
 }

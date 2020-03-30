@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.biz.tour.dao.userwater.FishUserWaterPicsDao;
-import com.biz.tour.domain.userwater.FishUserWaterPicsVO;
+import com.biz.tour.dao.usersea.FishUserSeaPicsDao;
+import com.biz.tour.domain.usersea.FishUserSeaPicsVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,20 +14,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class UserSeaPicsService {
-	private final FishUserWaterPicsDao waterpicsDao;
+	private final FishUserSeaPicsDao seapicsDao;
 	
-	public int insert(FishUserWaterPicsVO waterPicsVO) {
-		int ret=waterpicsDao.insert(waterPicsVO);
+	public int insert(FishUserSeaPicsVO seaPicsVO) {
+		int ret=seapicsDao.insert(seaPicsVO);
 		return ret;
 	}
 
-	public List<FishUserWaterPicsVO> findByFK(Long fk) {
+	public List<FishUserSeaPicsVO> findByFK(Long fk) {
 		// TODO Auto-generated method stub
-		return waterpicsDao.findByFk(fk);
+		return seapicsDao.findByFk(fk);
 	}
 
 	public int deleteById(Long ufp_id) {
 		// TODO Auto-generated method stub
-		return waterpicsDao.deleteById(ufp_id);
+		return seapicsDao.deleteById(ufp_id);
 	}
 }

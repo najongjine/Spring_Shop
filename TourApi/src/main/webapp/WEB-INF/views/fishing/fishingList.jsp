@@ -21,6 +21,17 @@ $(function() {
 			}
 		})
 	}
+	if(mode=="sea"){
+		$.ajax({
+			url:"${rootPath}/fishUserSea/findAndShow",
+			
+			method:"GET",
+			success:function(result){
+				$(".userList").html("")
+				$(".userList").html(result)
+			}
+		})
+	}
 })
 </script>
 <body>

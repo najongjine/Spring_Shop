@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.biz.tour.domain.usersea.FishUserSeaPicsVO;
 import com.biz.tour.domain.userwater.FishUserWaterPicsVO;
+import com.biz.tour.service.usersea.UserSeaPicsService;
+import com.biz.tour.service.usersea.UserSeaService;
 import com.biz.tour.service.userwater.UserWaterPicsService;
 import com.biz.tour.service.userwater.UserWaterService;
 
@@ -20,7 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FileUploadToServerService {
 	private final UserWaterPicsService uwPicsService;
+	private final UserSeaPicsService usPicsService;
 	private final UserWaterService uwService;
+	private final UserSeaService usService;
 	// 바다낚시 사진 테이블 선언해 줘야함
 
 	// servlet-context.xml에 설정된 파일 저장 경로 정보를 가져와서 사용하기
@@ -73,6 +78,15 @@ public class FileUploadToServerService {
 				uwPicsVO.setUfp_originalFName(originalFileName);
 				uwPicsVO.setUfp_uploadedFName(UploadedFName);
 				int ret = uwPicsService.insert(uwPicsVO);
+				log.debug("!!! pic upload ret :" + ret);
+			}
+			if (whichTable.equalsIgnoreCase("sea")) {
+				FishUserSeaPicsVO usPicsVO = new FishUserSeaPicsVO();
+				long fk = usService.getMaxID();
+				usPicsVO.setUfp_fk(fk);
+				usPicsVO.setUfp_originalFName(originalFileName);
+				usPicsVO.setUfp_uploadedFName(UploadedFName);
+				int ret = usPicsService.insert(usPicsVO);
 				log.debug("!!! pic upload ret :" + ret);
 			}
 

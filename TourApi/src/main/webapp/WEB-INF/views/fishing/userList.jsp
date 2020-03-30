@@ -21,7 +21,7 @@
 						$(".userList").html(result)
 					}
 				})
-		})
+		})//민물 낚시 검색옵션
 		
 		$(".page-item").click(function() {
 			var pageno=$(this).data("page")
@@ -34,7 +34,7 @@
 						$(".userList").html(result)
 					}
 				})
-		})
+		})// 민물 낚시 페이지네이션
 		
 		$(".userListTitle").click(function() {
 			var searchOption="";
@@ -47,8 +47,20 @@
 					$(".userList").html(result)
 				}
 			})
-		})
+		})//검색옵션 초기화
+		$(document).on("click","#detail",function(){
+			let uf_id=$(this).data("id")
+			document.location.href="${rootPath}/fishUserWater/view?uf_id="+uf_id
+		})//상세보기
 		}// 민물 낚시용 데이터 처리
+		
+
+		else if(${MODE=='sea'}){
+			$(document).on("click","#detail",function(){
+				let uf_id=$(this).data("id")
+				document.location.href="${rootPath}/fishUserSea/view?uf_id="+uf_id
+			})//상세보기
+		}
 	})
 </script>
 
@@ -74,7 +86,7 @@
 						alt="Card image" style="width: 100%">
 					<div class="card-body">
 						<h4 class="card-uf_title">${vo.uf_title }</h4>
-						<a href="${rootPath }/fishUserWater/view?uf_id=${vo.uf_id}"
+						<a id="detail" data-id="${vo.uf_id }" href="javascript:void(0)"
 							class="btn btn-primary">Detail</a>
 					</div>
 				</div>

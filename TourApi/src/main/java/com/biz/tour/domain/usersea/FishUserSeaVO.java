@@ -17,7 +17,7 @@ import lombok.ToString;
 @Builder
 public class FishUserSeaVO {
 	private long uf_id;// bigint AUTO_INCREMENT	PRIMARY KEY,
-	private long uf_username;// nVARCHAR(50),
+	private String uf_username;// nVARCHAR(50),
 	private String uf_title;// nVARCHAR(50),
 	private String uf_date;// nVARCHAR(150),
 	private String uf_addr1;// nVARCHAR(50),

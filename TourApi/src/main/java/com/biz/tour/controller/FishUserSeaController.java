@@ -3,6 +3,8 @@ package com.biz.tour.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,9 +15,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.biz.tour.domain.UserSearchVO;
+import com.biz.tour.domain.usersea.FishUserSeaCommentVO;
+import com.biz.tour.domain.usersea.FishUserSeaPicsVO;
 import com.biz.tour.domain.usersea.FishUserSeaVO;
-import com.biz.tour.domain.userwater.FishUserWaterCommentVO;
-import com.biz.tour.domain.userwater.FishUserWaterPicsVO;
 import com.biz.tour.domain.util.PageDTO;
 import com.biz.tour.service.fileupload.FileUploadToServerService;
 import com.biz.tour.service.usersea.UserSeaCommentService;
@@ -70,7 +72,7 @@ public class FishUserSeaController {
 		model.addAttribute("userSearchVO", userSearchVO);
 		model.addAttribute("userList", userList);
 		model.addAttribute("PAGE", pageDTO);
-		model.addAttribute("MODE", "water");
+		model.addAttribute("MODE", "sea");
 		return "fishing/userList";
 	}
 
@@ -83,16 +85,18 @@ public class FishUserSeaController {
 	}
 
 	@RequestMapping(value = "/seaInsert", method = RequestMethod.POST)
-	public String insert(FishUserSeaVO userVO, MultipartHttpServletRequest uploaded_files, Model model) {
-		int ret = uSeaService.insert(userVO);
+	public String insert(FishUserSeaVO userVO, MultipartHttpServletRequest uploaded_files,
+			HttpSession session,Model model) {
+		int ret = uSeaService.insert(userVO, session);
 
 		// 파일 업로드와 파일 이름을 DB에 저장을 같이함.
-		fUploadService.filesUp(uploaded_files, "water");
-		return null;
+		fUploadService.filesUp(uploaded_files, "sea");
+		return "redirect:/fish/sea";
 	}
 
 	@RequestMapping(value = "/seaUpdate", method = RequestMethod.GET)
-	public String update(Model model, String strId) {
+	public String update(Model model, String strId,HttpSession session) {
+		String loggedName=(String) session.getAttribute("U_NAME");
 		Long uf_id = (long) -1;
 		Long fk = (long) -1;
 		try {
@@ -103,10 +107,13 @@ public class FishUserSeaController {
 		}
 
 		FishUserSeaVO userVO = uSeaService.findById(uf_id);
-		List<FishUserWaterPicsVO> picsList = uSPicsService.findByFK(fk);
+		if(!userVO.getUf_username().equals(loggedName)) {
+			return null;
+		}
+		List<FishUserSeaPicsVO> picsList = uSPicsService.findByFK(fk);
 		model.addAttribute("userVO", userVO);
 		model.addAttribute("picsList", picsList);
-		model.addAttribute("MODE", "update");
+		model.addAttribute("MODE", "sea");
 		return "fishing/userInput";
 	}
 
@@ -122,8 +129,9 @@ public class FishUserSeaController {
 
 		userVO.setUf_id(uf_id);
 		uSeaService.update(userVO);
-		fUploadService.filesUp(uploaded_files, "water");
-		return null;
+		fUploadService.filesUp(uploaded_files, "sea");
+		model.addAttribute("uf_id", userVO.getUf_id());
+		return "redirect:/fishUserSea/view";
 	}
 
 	@RequestMapping(value = "/deletePic", method = RequestMethod.GET)
@@ -155,10 +163,10 @@ public class FishUserSeaController {
 			log.debug("view 문자열 변환중 오류: " + uf_id);
 		}
 		FishUserSeaVO userVO = uSeaService.findById(uf_id);
-		List<FishUserWaterPicsVO> picsList = uSPicsService.findByFK(uf_id);
+		List<FishUserSeaPicsVO> picsList = uSPicsService.findByFK(uf_id);
 		model.addAttribute("userVO", userVO);
 		model.addAttribute("picsList", picsList);
-
+		model.addAttribute("MODE", "sea");
 		return "fishing/userView";
 	}
 
@@ -171,15 +179,15 @@ public class FishUserSeaController {
 			// TODO: handle exception
 			log.debug("cmt 문자열 변환중 오류: " + ufc_fk);
 		}
-		List<FishUserWaterCommentVO> commentList = uSCommentService.findByFk(ufc_fk);
+		List<FishUserSeaCommentVO> commentList = uSCommentService.findByFk(ufc_fk);
 		model.addAttribute("commentList", commentList);
 		return "fishing/userComment";
 	}
 
 	@RequestMapping(value = "/comments", method = RequestMethod.POST)
-	public String comments(FishUserWaterCommentVO commentVO, Model model) {
+	public String comments(FishUserSeaCommentVO commentVO, Model model) {
 		int ret = uSCommentService.insert(commentVO);
-		List<FishUserWaterCommentVO> commentList = uSCommentService.findByFk(commentVO.getUfc_fk());
+		List<FishUserSeaCommentVO> commentList = uSCommentService.findByFk(commentVO.getUfc_fk());
 		model.addAttribute("commentList", commentList);
 		return "fishing/userComment";
 	}
@@ -194,10 +202,17 @@ public class FishUserSeaController {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		FishUserWaterCommentVO vo = new FishUserWaterCommentVO();
+		FishUserSeaCommentVO vo = new FishUserSeaCommentVO();
 		vo.setUfc_pid(ufc_pid);
 		vo.setUfc_fk(ufc_fk);
 		model.addAttribute("vo", vo);
 		return "fishing/userReplyForm";
+	}
+	
+	@RequestMapping(value = "/delete",method=RequestMethod.GET)
+	public String delete(String strId,HttpSession session) {
+		long uf_id=Long.valueOf(strId);
+		int ret=uSeaService.delete(uf_id,(String)session.getAttribute("U_NAME"));
+		return "redirect:/";
 	}
 }

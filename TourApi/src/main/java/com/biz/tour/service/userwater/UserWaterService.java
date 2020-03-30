@@ -2,6 +2,8 @@ package com.biz.tour.service.userwater;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Service;
 
 import com.biz.tour.dao.userwater.FishUserWaterDao;
@@ -18,9 +20,11 @@ public class UserWaterService {
 	private final FishUserWaterDao waterDao;
 	private final GetCurrentDateService curTimeService;
 	
-	public int insert(FishUserWaterVO waterVO) {
+	public int insert(FishUserWaterVO waterVO,HttpSession session) {
+		String loggedName=(String)session.getAttribute("U_NAME");
 		String curTime=curTimeService.getCurDate();
 		waterVO.setUf_date(curTime);
+		waterVO.setUf_username(loggedName);
 		int ret=waterDao.insert(waterVO);
 		return ret;
 	}
@@ -46,5 +50,14 @@ public class UserWaterService {
 	public List<FishUserWaterVO> findAll(int pageno, int itemLimit) {
 		// TODO Auto-generated method stub
 		return waterDao.findAll(pageno,itemLimit);
+	}
+
+	public int delete(long uf_id, String loggedName) {
+		// TODO Auto-generated method stub
+		FishUserWaterVO userVO=waterDao.findById(uf_id);
+		if(!userVO.getUf_username().equals(loggedName)) {
+			return -1;
+		}
+		return waterDao.delete(uf_id);
 	}
 }

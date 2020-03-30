@@ -2,14 +2,15 @@ package com.biz.tour.dao.usersea;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
+import com.biz.tour.domain.usersea.FishUserSeaPicsVO;
 import com.biz.tour.domain.usersea.FishUserSeaVO;
-import com.biz.tour.domain.userwater.FishUserWaterPicsVO;
 
 public interface FishUserSeaDao {
 	@Select("select * from tbl_userfish_sea limit #{pageno},#{itemLimit}")
@@ -23,7 +24,7 @@ public interface FishUserSeaDao {
 	public List<FishUserSeaVO> findAll(@Param("pageno") int pageno,@Param("itemLimit") int itemLimit);
 	
 	@Select("select * from tbl_userfish_sea_pics where ufp_fk=#{uf_id}")
-	public List<FishUserWaterPicsVO> findPicsByFK(String uf_id);
+	public List<FishUserSeaPicsVO> findPicsByFK(long uf_id);
 	
 	@Select("select * from tbl_userfish_sea where uf_id=#{uf_id}")
 	public FishUserSeaVO findById(Long uf_id);
@@ -44,5 +45,8 @@ public interface FishUserSeaDao {
 	public int insert(FishUserSeaVO userVO);
 
 	public int update(FishUserSeaVO userVO);
+	
+	@Delete("delete from tbl_userfish_sea where uf_id=#{uf_id}")
+	public int delete(long uf_id);
 
 }

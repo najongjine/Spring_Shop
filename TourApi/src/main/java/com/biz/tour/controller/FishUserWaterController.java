@@ -3,6 +3,8 @@ package com.biz.tour.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -83,16 +85,18 @@ public class FishUserWaterController {
 	}
 
 	@RequestMapping(value = "/waterInsert", method = RequestMethod.POST)
-	public String insert(FishUserWaterVO userVO, MultipartHttpServletRequest uploaded_files, Model model) {
-		int ret = uWaterService.insert(userVO);
+	public String insert(FishUserWaterVO userVO, MultipartHttpServletRequest uploaded_files,
+			HttpSession session,Model model) {
+		int ret = uWaterService.insert(userVO, session);
 
 		// 파일 업로드와 파일 이름을 DB에 저장을 같이함.
 		fUploadService.filesUp(uploaded_files, "water");
-		return null;
+		return "redirect:/fish/water";
 	}
 
 	@RequestMapping(value = "/waterUpdate", method = RequestMethod.GET)
-	public String update(Model model, String strId) {
+	public String update(Model model, String strId,HttpSession session) {
+		String loggedName=(String) session.getAttribute("U_NAME");
 		Long uf_id = (long) -1;
 		Long fk = (long) -1;
 		try {
@@ -103,10 +107,13 @@ public class FishUserWaterController {
 		}
 
 		FishUserWaterVO userVO = uWaterService.findById(uf_id);
+		if(!userVO.getUf_username().equals(loggedName)) {
+			return null;
+		}
 		List<FishUserWaterPicsVO> picsList = uWPicsService.findByFK(fk);
 		model.addAttribute("userVO", userVO);
 		model.addAttribute("picsList", picsList);
-		model.addAttribute("MODE", "update");
+		model.addAttribute("MODE", "water");
 		return "fishing/userInput";
 	}
 
@@ -123,7 +130,8 @@ public class FishUserWaterController {
 		userVO.setUf_id(uf_id);
 		uWaterService.update(userVO);
 		fUploadService.filesUp(uploaded_files, "water");
-		return null;
+		model.addAttribute("uf_id", userVO.getUf_id());
+		return "redirect:/fishUserWater/view";
 	}
 
 	@RequestMapping(value = "/deletePic", method = RequestMethod.GET)
@@ -158,7 +166,7 @@ public class FishUserWaterController {
 		List<FishUserWaterPicsVO> picsList = uWPicsService.findByFK(uf_id);
 		model.addAttribute("userVO", userVO);
 		model.addAttribute("picsList", picsList);
-
+		model.addAttribute("MODE", "water");
 		return "fishing/userView";
 	}
 
@@ -199,5 +207,12 @@ public class FishUserWaterController {
 		vo.setUfc_fk(ufc_fk);
 		model.addAttribute("vo", vo);
 		return "fishing/userReplyForm";
+	}
+	
+	@RequestMapping(value = "/delete",method=RequestMethod.GET)
+	public String delete(String strId,HttpSession session) {
+		long uf_id=Long.valueOf(strId);
+		int ret=uWaterService.delete(uf_id,(String)session.getAttribute("U_NAME"));
+		return "redirect:/";
 	}
 }

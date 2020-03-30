@@ -2,6 +2,7 @@ package com.biz.tour.dao.userwater;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -44,5 +45,8 @@ public interface FishUserWaterDao {
 	public int insert(FishUserWaterVO userVO);
 
 	public int update(FishUserWaterVO userVO);
+
+	@Delete("delete from tbl_userfish_water where uf_id=#{uf_id}")
+	public int delete(long uf_id);
 
 }

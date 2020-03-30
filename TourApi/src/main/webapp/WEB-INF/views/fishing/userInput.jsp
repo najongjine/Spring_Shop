@@ -19,10 +19,13 @@
 				<b>date:</b> <input name="uf_date" value="${userVO.uf_date }" type="hidden">
 			</p>
 			<p>
-				<b>uf_addr1:</b> <input name="uf_addr1" value="${userVO.uf_addr1 }">
+				<b>title:</b> <input name="uf_title" value="${userVO.uf_title }">
 			</p>
 			<p>
-				<b>uf_addr2:</b> <input name="uf_addr2" value="${userVO.uf_addr2 }">
+				<b>addr1:</b> <input name="uf_addr1" value="${userVO.uf_addr1 }">
+			</p>
+			<p>
+				<b>addr2:</b> <input name="uf_addr2" value="${userVO.uf_addr2 }">
 			</p>
 			<p>
 				<b>content:</b> <textarea class="summernote" name="uf_text" value="${userVO.uf_text }"></textarea>
@@ -40,9 +43,16 @@
 					<c:forEach items="${picsList}" var="vo">
 						<p>
 						<img src="${rootPath }/files/${vo.ufp_uploadedFName }">
-						<a href="${rootPath }/fishUser/deletePic?strUfp_id=${vo.ufp_id}&strFk=${vo.ufp_fk}">
+						<c:if test="${MODE=='water' }">
+						<a href="${rootPath }/fishUserWater/deletePic?strUfp_id=${vo.ufp_id}&strFk=${vo.ufp_fk}">
 						<button>deletePic</button>
 						</a>
+						</c:if>
+						<c:if test="${MODE=='sea' }">
+						<a href="${rootPath }/fishUserSea/deletePic?strUfp_id=${vo.ufp_id}&strFk=${vo.ufp_fk}">
+						<button>deletePic</button>
+						</a>
+						</c:if>
 						</p>
 					</c:forEach>
 				</c:when>

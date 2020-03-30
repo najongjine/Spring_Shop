@@ -47,6 +47,28 @@ $(function() {
 			}
 		})
 	})
+	$(document).on("click","#btn-delete",function(){
+		if(${U_NAME!=userVO.uf_username}){
+			return false
+		}
+		if(${MODE=='water'}){
+			document.location.replace("${rootPath}/fishUserWater/delete?strId=${userVO.uf_id}")
+		}
+		else if(${MODE=='sea'}){
+			document.location.replace("${rootPath}/fishUserSea/delete?strId=${userVO.uf_id}")
+		}
+	})
+	$(document).on("click",".btn-update",function(){
+		if(${U_NAME!=userVO.uf_username}){
+			return false
+		}
+		if(${MODE=='water'}){
+			document.location.replace("${rootPath}/fishUserWater/waterUpdate?strId=${userVO.uf_id}")
+		}
+		else if(${MODE=='sea'}){
+			document.location.replace("${rootPath}/fishUserSea/seaUpdate?strId=${userVO.uf_id}")
+		}
+	})
 	
 })
 </script>
@@ -85,6 +107,8 @@ $(function() {
 				</c:otherwise>
 			</c:choose>
 		</section>
+		<button class="btn-update" type="button">modify</button>
+		<button id="btn-delete" type="button">delete</button>
 	</section>
 	<section class="commentInput">
 	<br/>
