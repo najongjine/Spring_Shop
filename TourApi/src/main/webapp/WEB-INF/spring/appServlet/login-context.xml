@@ -12,12 +12,12 @@
 
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/fishUserWater/waterInsert" />
-			<mvc:mapping path="/fishUserSea/seaInsert" />
-			<mvc:mapping path="/fishUserWater/waterUpdate" />
-			<mvc:mapping path="/fishUserSea/seaUpdate" />
-			<mvc:mapping path="/fishUserWater/delete" />
-			<mvc:mapping path="/fishUserSea/delete" />
+			<mvc:mapping path="/fishUserWater/waterInsert*" />
+			<mvc:mapping path="/fishUserSea/seaInsert*" />
+			<mvc:mapping path="/fishUserWater/waterUpdate*" />
+			<mvc:mapping path="/fishUserSea/seaUpdate*" />
+			<mvc:mapping path="/fishUserWater/delete*" />
+			<mvc:mapping path="/fishUserSea/delete*" />
 			<ref bean="auth"/>
 		</mvc:interceptor>
 	</mvc:interceptors>

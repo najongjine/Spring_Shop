@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	$(function() {
 		if(${MODE=='water'}){
-		$("#userSearch").click(function() {
+			$(document).on("click","#userSearch",function() {
 			var formData=$(".userSearch form").serialize()
 			$.ajax({
 					url : "${rootPath}/fishUserWater/findAndShow",
@@ -21,9 +21,9 @@
 						$(".userList").html(result)
 					}
 				})
-		})//민물 낚시 검색옵션
+		})//유저민물 낚시 검색옵션
 		
-		$(".page-item").click(function() {
+		$(document).on("click",".page-item",function() {
 			var pageno=$(this).data("page")
 			$.ajax({
 					url : "${rootPath}/fishUserWater/findAndShow",
@@ -36,7 +36,7 @@
 				})
 		})// 민물 낚시 페이지네이션
 		
-		$(".userListTitle").click(function() {
+		$(document).on("click",".userListTitle",function() {
 			var searchOption="";
 			$.ajax({
 				url : "${rootPath}/fishUserWater/findAndShow",
@@ -59,16 +59,53 @@
 			$(document).on("click","#detail",function(){
 				let uf_id=$(this).data("id")
 				document.location.href="${rootPath}/fishUserSea/view?uf_id="+uf_id
-			})//상세보기
+			})//바다용 상세보기
+			$(document).on("click","#userSearch",function() {
+				var formData=$(".userSearch form").serialize()
+				$.ajax({
+						url : "${rootPath}/fishUserSea/findAndShow",
+						data:formData,
+						method : "GET",
+						success : function(result) {
+							$(".userList").html("")
+							$(".userList").html(result)
+						}
+					})
+			})//유저바다 낚시용 검색
+			$(document).on("click",".page-item",function() {
+				var pageno=$(this).data("page")
+				$.ajax({
+						url : "${rootPath}/fishUserSea/findAndShow",
+						data:{pageno:pageno},
+						method : "GET",
+						success : function(result) {
+							$(".userList").html("")
+							$(".userList").html(result)
+						}
+					})
+			})// 유저바다 낚시 페이지네이션
+			$(document).on("click",".userListTitle",function() {
+				var searchOption="";
+				$.ajax({
+					url : "${rootPath}/fishUserSea/findAndShow",
+					data:{searchOption:searchOption},
+					method : "GET",
+					success : function(result) {
+						$(".userList").html("")
+						$(".userList").html(result)
+					}
+				})
+			})//유저낚시 검색옵션 초기화
 		}
 	})
 </script>
 
 <body>
+	<p>mode:${MODE }</p>
 	<h4 class="userListTitle">User Fishing Spot</h4>
 	<br />
 	<section class="userSearch">
-		<form method="get" action="${rootPath }/fishUserWater/findAndShow">
+		<form method="get">
 			<label for="searchOption">검색</label> <select name="searchOption">
 				<option value="titleSearch">제목으로 검색</option>
 			</select> <input name="inputStr">
@@ -77,9 +114,9 @@
 		<br />
 
 	</section class="userList">
-	<section>
+	<section class="row">
 		<c:forEach items="${userList }" var="vo" varStatus="i">
-			<div class="container">
+			<div class="container col-sm-3">
 				<h2>${vo.uf_title}</h2>
 				<div class="card" style="width: 400px">
 					<img class="card-img-top" src="${rootPath }/files/${vo.mainPic }"

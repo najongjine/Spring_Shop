@@ -10,4 +10,8 @@
 * 공공Db에서 나온 장소와 유저가 올린 장소 합해서 보여주는 view page 
  + 유저가 보여준 장소는 검색 기능 포함.
  
+ * logout, jaspyt, 챗봇
+ 
+ * 챗봇, input, button css
+ 
  

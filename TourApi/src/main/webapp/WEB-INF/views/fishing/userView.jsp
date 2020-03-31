@@ -92,14 +92,16 @@ $(function() {
 				<b>content:</b> ${userVO.uf_text }
 			</p>
 			
-		<section class="pics">
+		<section class="pics d-flex flex-wrap">
 		<br/>
 		<hr/>
 			<c:choose>
 				<c:when test="${picsList!=null }">
 					<c:forEach items="${picsList}" var="vo">
 						<p>
-						<img src="${rootPath }/files/${vo.ufp_uploadedFName }">
+						<a href="${rootPath }/files/${vo.ufp_uploadedFName }">
+						<img src="${rootPath }/files/${vo.ufp_uploadedFName }" width="200rem">
+						</a>
 						</p>
 					</c:forEach>
 				</c:when>

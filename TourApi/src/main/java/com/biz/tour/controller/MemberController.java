@@ -61,6 +61,11 @@ public class MemberController {
 		session.setAttribute("U_NAME", memberVO.getU_name());
 		return "redirect:/";
 	}
+	@RequestMapping(value = "/logout",method=RequestMethod.GET)
+	public String logout(HttpSession session) {
+		session.removeAttribute("U_NAME");
+		return "redirect:/";
+	}
 	@RequestMapping(value = "/delete",method=RequestMethod.GET)
 	public String delete(String u_name,HttpSession session) {
 		int ret=memService.delete(u_name);

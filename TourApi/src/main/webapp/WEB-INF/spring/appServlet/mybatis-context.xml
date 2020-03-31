@@ -16,8 +16,8 @@
 			value="com.mysql.cj.jdbc.Driver"></property>
 		<property name="url"
 			value="jdbc:mysql://localhost:3306/emsDB?serverTimeZone=Asia/Seoul&amp;useSSL=false"></property>
-		<property name="username" value="ems"></property>
-		<property name="password" value="ems"></property>
+		<property name="username" value="${mysql.user}"></property>
+		<property name="password" value="${mysql.password}"></property>
 	</bean>
 
 	<bean id="sessionFactory"

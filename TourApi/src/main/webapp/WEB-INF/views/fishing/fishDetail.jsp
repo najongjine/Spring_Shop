@@ -8,8 +8,32 @@
 <%@ include file="/WEB-INF/views/include/include-head.jsp"%>
 <title>Detail</title>
 </head>
+<script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xxe287b2ab163049a58075ca366a804bea"></script>
+<script type="text/javascript" >
+$(function(){
+	var map;
+    let mapx=${fishVO.mapx}
+    let mapy=${fishVO.mapy}
+    map=new Tmapv2.Map("map_div",{
+      width:'90%',
+      height:'500px',
+      center:new Tmapv2.LatLng(mapy,mapx),
+      zoom: 15
+    })
+    //map.setLanguage("EN",true); // 영문
+    var marker = new Tmapv2.Marker({
+		position: new Tmapv2.LatLng(mapy,mapx), //Marker의 중심좌표 설정.
+		map: map //Marker가 표시될 Map 설정..
+	})
+	$("#daumMap").hide()
+	$("#showDaumMap").click(function() {
+		$("#daumMap").toggle()
+	})
+  })
+</script>
 <body>
 	<%@ include file="/WEB-INF/views/include/include-header.jsp"%>
+	
 	<section>
 	<c:if test="${fishVO.booktour!=null}">
 		<p>Introduced in Text book :${fishVO.booktour}</p>
@@ -37,5 +61,24 @@
 	<p>mlevel: ${fishVO.mlevel}</p>
 	<p>description : ${fishVO.overview}</p>
 	</section>
+	
+	<section id="daumMapButton">
+	<br/>
+	<hr/>
+	<button id="showDaumMap">use daum map(korean version)</button>    
+    </section>
+    
+    <section id="daumMap">
+    <br/>
+    <iframe src="https://m.map.kakao.com/" width="100%" height="1000px"></iframe>
+    </section>
+	
+	<section id="map_div">
+	<hr/>
+	<p>map: (it only shows in korean... sorry for inconvenience... for detailed explanation, please use google map </p>
+	<p>or navigation application on your gadget.)</p>
+    </section>
+    
+    
 </body>
 </html>

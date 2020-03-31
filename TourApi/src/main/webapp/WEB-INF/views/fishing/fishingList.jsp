@@ -59,9 +59,9 @@ $(function() {
 	</section>
 	</c:if>
 	
-	<section class="apiData">
+	<section class="apiData row">
 		<c:forEach items="${fishList }" var="vo" varStatus="i">
-			<div class="container">
+			<div class="container col-sm-3">
 				<h2>${vo.title}</h2>
 				<div class="card" style="width: 400px">
 					<img class="card-img-top" src="${vo.firstimage }" alt="Card image"
