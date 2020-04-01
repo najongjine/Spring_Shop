@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.biz.tour.config.TourAPIConfig;
 import com.biz.tour.domain.fishAreaBased.FishAB_RestResponse;
 import com.biz.tour.domain.fishAreaBased.FishAreaBasedVO;
 import com.biz.tour.domain.fishDetailCommon.FishDC_RestResponse;
@@ -30,7 +31,7 @@ public class TourService {
 	private String getAreaBasedQuery(String type,String strPageno) {
 		String queryString = "";
 		queryString = fishTourAreabasedURL;
-		queryString += "?serviceKey=i7aroZN%2BLlgjJucKmTqVpL8Kd%2Fi05AThPQDDLk5MLtoNU0HjelO4288BGCOhZRMOlbWpN34p8Wbyn0Ijz0WbWQ%3D%3D";
+		queryString += "?serviceKey="+TourAPIConfig.TOURAPI_KEY;
 		queryString += "&MobileOS=ETC";
 		queryString += "&MobileApp=Fisher";
 		queryString += "&pageNo="+strPageno;
@@ -54,7 +55,7 @@ public class TourService {
 	private String getDetailQuery(String contentid) {
 		String queryString = "";
 		queryString = fishDetailCommonURL;
-		queryString += "?serviceKey=i7aroZN%2BLlgjJucKmTqVpL8Kd%2Fi05AThPQDDLk5MLtoNU0HjelO4288BGCOhZRMOlbWpN34p8Wbyn0Ijz0WbWQ%3D%3D";
+		queryString += "?serviceKey="+TourAPIConfig.TOURAPI_KEY;
 		queryString += "&MobileOS=ETC";
 		queryString += "&MobileApp=Fisher";
 

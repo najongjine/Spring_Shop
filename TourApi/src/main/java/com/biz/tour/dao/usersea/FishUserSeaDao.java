@@ -23,6 +23,9 @@ public interface FishUserSeaDao {
 			)
 	public List<FishUserSeaVO> findAll(@Param("pageno") int pageno,@Param("itemLimit") int itemLimit);
 	
+	@Select("select count(*) from tbl_userfish_sea")
+	public int countFindAll();
+	
 	@Select("select * from tbl_userfish_sea_pics where ufp_fk=#{uf_id}")
 	public List<FishUserSeaPicsVO> findPicsByFK(long uf_id);
 	
@@ -37,7 +40,10 @@ public interface FishUserSeaDao {
 				many=@Many(select = "findPicsByFK"))
 				}
 			)
-	public List<FishUserSeaVO> findByTitle(@Param("uf_title") String uf_title,@Param("pageno") int pageno,@Param("itemLimit") int itemLimit); 
+	public List<FishUserSeaVO> findByTitle(@Param("uf_title") String uf_title,@Param("pageno") int pageno,@Param("itemLimit") int itemLimit);
+	
+	@Select("select count(*) from tbl_userfish_sea where uf_title like CONCAT ('%', #{uf_title} ,'%')")
+	public int countFindByTitle(@Param("uf_title") String uf_title);
 	
 	@Select("select max(uf_id) from tbl_userfish_sea")
 	public long getMaxID();

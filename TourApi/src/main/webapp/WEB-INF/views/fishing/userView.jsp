@@ -10,43 +10,113 @@
 <script type="text/javascript">
 $(function() {
 	var ufc_fk=${userVO.uf_id}
-	$.ajax({
-		url:"${rootPath}/fishUserWater/comments",
-		data:{ufc_fk:ufc_fk},
-		type:"GET",
-		success:function(result){
-			$(".comments").html("")
-			$(".comments").html(result)
-		}
-	})
-	
-	//원글에서 댓글쓴거 보내기
-	$(document).on("click","#commentSubmit",function(){
-		var formData=$("form#pcomment").serialize()
+	var mode="${MODE}"
+	if(mode=='water'){
 		$.ajax({
 			url:"${rootPath}/fishUserWater/comments",
-			data:formData,
-			type:"POST",
+			data:{ufc_fk:ufc_fk},
+			type:"GET",
 			success:function(result){
 				$(".comments").html("")
 				$(".comments").html(result)
 			}
+		})//민물 낙시글 답글들 가져오기
+		
+		$(document).on("click",".page-item",function(){
+			$.ajax({
+				url:"${rootPath}/fishUserWater/comments",
+				data:{ufc_fk:ufc_fk,pageno:$(this).data("page")},
+				type:"GET",
+				success:function(result){
+					$(".comments").html("")
+					$(".comments").html(result)
+				}
+			})//페이징 민물 낙시글 답글들 가져오기
 		})
-	})
-	
-	//댓글의 댓글에서 쓴거 보내기
-	$(document).on("click","#btnReplyReply",function(){
-		var formData=$("form.replyreply").serialize()
+		
+		//민물낙시글 원글에서 댓글쓴거 보내기
+		$(document).on("click","#commentSubmit",function(){
+			var formData=$("form#pcomment").serialize()
+			$.ajax({
+				url:"${rootPath}/fishUserWater/comments",
+				data:formData,
+				type:"POST",
+				success:function(result){
+					$(".comments").html("")
+					$(".comments").html(result)
+				}
+			})
+		})
+		
+		//댓글의 댓글에서 쓴거 보내기
+		$(document).on("click","#btnReplyReply",function(){
+			var formData=$("form.replyreply").serialize()
+			$.ajax({
+				url:"${rootPath}/fishUserWater/comments",
+				data:formData,
+				type:"POST",
+				success:function(result){
+					$(".comments").html("")
+					$(".comments").html(result)
+				}
+			})
+		})
+		
+		//민물낚시 끝
+	}
+	else if(mode=='sea'){
 		$.ajax({
-			url:"${rootPath}/fishUserWater/comments",
-			data:formData,
-			type:"POST",
+			url:"${rootPath}/fishUserSea/comments",
+			data:{ufc_fk:ufc_fk},
+			type:"GET",
 			success:function(result){
 				$(".comments").html("")
 				$(".comments").html(result)
 			}
+		})//민물 낙시글 답글들 가져오기
+		
+		$(document).on("click",".page-item",function(){
+			$.ajax({
+				url:"${rootPath}/fishUserSea/comments",
+				data:{ufc_fk:ufc_fk,pageno:$(this).data("page")},
+				type:"GET",
+				success:function(result){
+					$(".comments").html("")
+					$(".comments").html(result)
+				}
+			})//페이징 바다 낙시글 답글들 가져오기
 		})
-	})
+		
+		//민물낙시글 원글에서 댓글쓴거 보내기
+		$(document).on("click","#commentSubmit",function(){
+			var formData=$("form#pcomment").serialize()
+			$.ajax({
+				url:"${rootPath}/fishUserSea/comments",
+				data:formData,
+				type:"POST",
+				success:function(result){
+					$(".comments").html("")
+					$(".comments").html(result)
+				}
+			})
+		})
+		
+		//댓글의 댓글에서 쓴거 보내기
+		$(document).on("click","#btnReplyReply",function(){
+			var formData=$("form.replyreply").serialize()
+			$.ajax({
+				url:"${rootPath}/fishUserSea/comments",
+				data:formData,
+				type:"POST",
+				success:function(result){
+					$(".comments").html("")
+					$(".comments").html(result)
+				}
+			})
+		})
+		
+		//바다 낙시 끝
+	}
 	$(document).on("click","#btn-delete",function(){
 		if(${U_NAME!=userVO.uf_username}){
 			return false
@@ -69,7 +139,6 @@ $(function() {
 			document.location.replace("${rootPath}/fishUserSea/seaUpdate?strId=${userVO.uf_id}")
 		}
 	})
-	
 })
 </script>
 </head>
@@ -131,5 +200,6 @@ $(function() {
 	<section class="comments">
 		
 	</section>
+	<%@ include file="/WEB-INF/views/chatbot.jspf" %>
 </body>
 </html>

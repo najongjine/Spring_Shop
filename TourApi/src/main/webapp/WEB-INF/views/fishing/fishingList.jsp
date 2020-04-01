@@ -89,5 +89,6 @@ $(function() {
 	<br/>
 	<section class="userList">
 	</section>
+	<%@ include file="/WEB-INF/views/chatbot.jspf" %>
 </body>
 </html>

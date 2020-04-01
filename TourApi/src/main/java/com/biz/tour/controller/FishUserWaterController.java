@@ -51,11 +51,14 @@ public class FishUserWaterController {
 	public String findAndShow(UserSearchVO userSearchVO,
 			@RequestParam(value = "pageno", defaultValue = "1") String strPageno, Model model) {
 		int pageno = Integer.valueOf(strPageno);
+		int maxListSize=-1;
 		List<FishUserWaterVO> userList = new ArrayList<FishUserWaterVO>();
 		if (userSearchVO.getSearchOption().equalsIgnoreCase("titleSearch")) {
-			userList = uWaterService.findByTitle(userSearchVO.getInputStr(), pageno-1, itemLimit);
+			maxListSize=uWaterService.countFindByTitle(userSearchVO.getInputStr());
+			userList = uWaterService.findByTitle(userSearchVO.getInputStr(), (pageno-1)*itemLimit, itemLimit);
 		} else {
-			userList = uWaterService.findAll(pageno-1,itemLimit);
+			maxListSize=uWaterService.countFindAll();
+			userList = uWaterService.findAll((pageno-1)*itemLimit,itemLimit);
 		}
 		if (!userList.isEmpty()) {
 			try {
@@ -68,7 +71,7 @@ public class FishUserWaterController {
 				// TODO: handle exception
 			}
 		}// 메인 사진 고르기
-		PageDTO pageDTO=pagiService.makePageNation(userList.size(), pageno, itemLimit);
+		PageDTO pageDTO=pagiService.makePageNation(maxListSize, pageno, itemLimit);
 		model.addAttribute("userSearchVO", userSearchVO);
 		model.addAttribute("userList", userList);
 		model.addAttribute("PAGE", pageDTO);
@@ -171,24 +174,39 @@ public class FishUserWaterController {
 	}
 
 	@RequestMapping(value = "/comments", method = RequestMethod.GET)
-	public String comments(@RequestParam("ufc_fk") String strFk, Model model) {
+	public String comments(@RequestParam("ufc_fk") String strFk, @RequestParam(value = "pageno", defaultValue = "1") String strPageno,
+			Model model) {
+		int pageno=Integer.valueOf(strPageno);
 		long ufc_fk = -1;
+		int maxListSize=-1;
 		try {
 			ufc_fk = Long.valueOf(strFk);
 		} catch (Exception e) {
 			// TODO: handle exception
 			log.debug("cmt 문자열 변환중 오류: " + ufc_fk);
 		}
-		List<FishUserWaterCommentVO> commentList = uWCommentService.findByFk(ufc_fk);
+		maxListSize=uWCommentService.countFindByFk(ufc_fk);
+		List<FishUserWaterCommentVO> commentList = uWCommentService.findByFk(ufc_fk,(pageno-1),itemLimit);
+		log.debug("!!! comtlist: "+commentList);
 		model.addAttribute("commentList", commentList);
+		
+		PageDTO pageDTO=pagiService.makePageNation(maxListSize, pageno, itemLimit);
+		model.addAttribute("PAGE", pageDTO);
 		return "fishing/userComment";
 	}
 
 	@RequestMapping(value = "/comments", method = RequestMethod.POST)
-	public String comments(FishUserWaterCommentVO commentVO, Model model) {
-		int ret = uWCommentService.insert(commentVO);
-		List<FishUserWaterCommentVO> commentList = uWCommentService.findByFk(commentVO.getUfc_fk());
+	public String comments(FishUserWaterCommentVO commentVO,@RequestParam(value = "pageno", defaultValue = "1") String strPageno,
+			HttpSession session,Model model) {
+		int pageno=Integer.valueOf(strPageno);
+		int maxListSize=-1;
+		int ret = uWCommentService.insert(commentVO,session);
+		maxListSize=uWCommentService.countFindByFk(commentVO.getUfc_fk());
+		List<FishUserWaterCommentVO> commentList = uWCommentService.findByFk(commentVO.getUfc_fk(),(pageno-1),itemLimit);
 		model.addAttribute("commentList", commentList);
+		
+		PageDTO pageDTO=pagiService.makePageNation(maxListSize, pageno, itemLimit);
+		model.addAttribute("PAGE", pageDTO);
 		return "fishing/userComment";
 	}
 

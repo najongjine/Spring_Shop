@@ -38,10 +38,3 @@
 </c:if>
 </ul>
 </nav>
-
-<style>
-*{
-margin-top: 10rem;
-margin-bottom: 10rem;
-}
-</style>

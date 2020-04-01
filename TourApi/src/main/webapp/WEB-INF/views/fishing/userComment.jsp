@@ -27,6 +27,7 @@ $(function() {
 
 <br/>
 <hr/>
+<section>
 <c:choose>
 	<c:when test="${commentList!=null}">
 		<c:forEach items="${commentList}" var="vo">
@@ -40,3 +41,8 @@ $(function() {
 		</c:forEach>
 	</c:when>
 </c:choose>
+</section>
+
+<section>
+<%@ include file="/WEB-INF/views/include/cmtPagi.jsp" %>
+</section>

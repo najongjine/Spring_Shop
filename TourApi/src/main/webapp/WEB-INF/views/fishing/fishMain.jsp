@@ -18,5 +18,6 @@
 		<p>Sea Fishing</p>
 	</a>
 	</section>
+	<%@ include file="/WEB-INF/views/chatbot.jspf" %>
 </body>
 </html>

@@ -60,4 +60,12 @@ public class UserWaterService {
 		}
 		return waterDao.delete(uf_id);
 	}
+	
+	public int countFindAll() {
+		return waterDao.countFindAll();
+	}
+	
+	public int countFindByTitle(String uf_title) {
+		return waterDao.countFindByTitle(uf_title);
+	}
 }

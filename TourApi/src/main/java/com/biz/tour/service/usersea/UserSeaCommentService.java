@@ -3,6 +3,8 @@ package com.biz.tour.service.usersea;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Service;
 
 import com.biz.tour.dao.usersea.FishSeaCommentDao;
@@ -19,7 +21,7 @@ public class UserSeaCommentService {
 	private final FishSeaCommentDao scDao;
 	private final GetCurrentDateService dateService;
 
-	public List<FishUserSeaCommentVO> findByFk(long ufc_fk) {
+	public List<FishUserSeaCommentVO> findByFk(long ufc_fk, int pageno, int itemLimit) {
 		// 댓글중 타 댓글에 의존이 없는 (pid=0)인 댓글들 뽑음
 		List<FishUserSeaCommentVO> commentList=scDao.findByFk(ufc_fk);
 		
@@ -30,8 +32,16 @@ public class UserSeaCommentService {
 		for(FishUserSeaCommentVO vo:commentList) {
 			sortedCommentList.addAll(sortReplyHeriarchy(vo, 0));
 		}
-		// TODO Auto-generated method stub
-		return sortedCommentList;
+		List<FishUserSeaCommentVO> pgStedCmtList=new ArrayList<FishUserSeaCommentVO>();
+		for(int i=(pageno*itemLimit);i<(pageno+1)*itemLimit;i++) {
+			try {
+				pgStedCmtList.add(sortedCommentList.get(i));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		return pgStedCmtList;
 	}
 
 	/*
@@ -46,7 +56,7 @@ public class UserSeaCommentService {
 				c_header+=" re: ";
 			}
 			String moddedText=c_header+cmtVO.getUfc_text();
-			cmtVO.setUfc_title(moddedText);
+			cmtVO.setUfc_text(moddedText);
 		}
 		// 매개 변수로 받은 댓글vo(부모)vo를 list에 먼저 추가 시켜줌
 		retList.add(cmtVO);
@@ -63,11 +73,16 @@ public class UserSeaCommentService {
 		return retList;
 	}
 
-	public int insert(FishUserSeaCommentVO commentVO) {
-		log.debug("!!! insert cmt service");
+	public int insert(FishUserSeaCommentVO commentVO, HttpSession session) {
 		// TODO Auto-generated method stub
+		String username=(String) session.getAttribute("U_NAME");
 		String curDate=dateService.getCurDate();
 		commentVO.setUfc_date(curDate);
+		commentVO.setUfc_username(username);
 		return scDao.insert(commentVO);
+	}
+	
+	public int countFindByFk(long ufc_fk) {
+		return scDao.countFindByFk(ufc_fk);
 	}
 }

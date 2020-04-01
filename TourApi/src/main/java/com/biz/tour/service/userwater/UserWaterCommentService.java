@@ -3,6 +3,8 @@ package com.biz.tour.service.userwater;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Service;
 
 import com.biz.tour.dao.userwater.FishWaterCommentDao;
@@ -19,7 +21,7 @@ public class UserWaterCommentService {
 	private final FishWaterCommentDao wcDao;
 	private final GetCurrentDateService dateService;
 
-	public List<FishUserWaterCommentVO> findByFk(long ufc_fk) {
+	public List<FishUserWaterCommentVO> findByFk(long ufc_fk, int pageno, int itemLimit) {
 		// 댓글중 타 댓글에 의존이 없는 (pid=0)인 댓글들 뽑음
 		List<FishUserWaterCommentVO> commentList=wcDao.findByFk(ufc_fk);
 		
@@ -30,8 +32,20 @@ public class UserWaterCommentService {
 		for(FishUserWaterCommentVO vo:commentList) {
 			sortedCommentList.addAll(sortReplyHeriarchy(vo, 0));
 		}
-		// TODO Auto-generated method stub
-		return sortedCommentList;
+		log.debug("!!! sortedcmtlist: "+sortedCommentList);
+		List<FishUserWaterCommentVO> pgStedCmtList=new ArrayList<FishUserWaterCommentVO>();
+		for(int i=(pageno*itemLimit);i<(pageno+1)*itemLimit;i++) {
+			try {
+				log.debug("i: "+i);
+				log.debug("i list: "+sortedCommentList.get(i));
+				pgStedCmtList.add(sortedCommentList.get(i));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		log.debug("!!! pgStedCmtList: "+pgStedCmtList);
+		
+		return pgStedCmtList;
 	}
 
 	/*
@@ -46,7 +60,7 @@ public class UserWaterCommentService {
 				c_header+=" re: ";
 			}
 			String moddedText=c_header+cmtVO.getUfc_text();
-			cmtVO.setUfc_title(moddedText);
+			cmtVO.setUfc_text(moddedText);
 		}
 		// 매개 변수로 받은 댓글vo(부모)vo를 list에 먼저 추가 시켜줌
 		retList.add(cmtVO);
@@ -63,11 +77,16 @@ public class UserWaterCommentService {
 		return retList;
 	}
 
-	public int insert(FishUserWaterCommentVO commentVO) {
-		log.debug("!!! insert cmt service");
+	public int insert(FishUserWaterCommentVO commentVO, HttpSession session) {
 		// TODO Auto-generated method stub
+		String username=(String) session.getAttribute("U_NAME");
 		String curDate=dateService.getCurDate();
 		commentVO.setUfc_date(curDate);
+		commentVO.setUfc_username(username);
 		return wcDao.insert(commentVO);
+	}
+	
+	public int countFindByFk(long ufc_fk) {
+		return wcDao.countFindByFk(ufc_fk);
 	}
 }

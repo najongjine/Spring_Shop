@@ -61,5 +61,6 @@
 			</c:choose>
 		</section>
 	</section>
+	<%@ include file="/WEB-INF/views/chatbot.jspf" %>
 </body>
 </html>

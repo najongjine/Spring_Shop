@@ -23,6 +23,9 @@ public interface FishUserWaterDao {
 			)
 	public List<FishUserWaterVO> findAll(@Param("pageno") int pageno,@Param("itemLimit") int itemLimit);
 	
+	@Select("select count(*) from tbl_userfish_water")
+	public int countFindAll();
+	
 	@Select("select * from tbl_userfish_water_pics where ufp_fk=#{uf_id}")
 	public List<FishUserWaterPicsVO> findPicsByFK(String uf_id);
 	
@@ -38,6 +41,9 @@ public interface FishUserWaterDao {
 				}
 			)
 	public List<FishUserWaterVO> findByTitle(@Param("uf_title") String uf_title,@Param("pageno") int pageno,@Param("itemLimit") int itemLimit); 
+	
+	@Select("select count(*) from tbl_userfish_water where uf_title like CONCAT ('%', #{uf_title} ,'%')")
+	public int countFindByTitle(@Param("uf_title") String uf_title);
 	
 	@Select("select max(uf_id) from tbl_userfish_water")
 	public long getMaxID();

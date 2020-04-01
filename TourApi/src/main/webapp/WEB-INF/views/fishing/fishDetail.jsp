@@ -79,6 +79,6 @@ $(function(){
 	<p>or navigation application on your gadget.)</p>
     </section>
     
-    
+    <%@ include file="/WEB-INF/views/chatbot.jspf" %>
 </body>
 </html>

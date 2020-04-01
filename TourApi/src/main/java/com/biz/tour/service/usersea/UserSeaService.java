@@ -60,4 +60,12 @@ public class UserSeaService {
 		}
 		return seaDao.delete(uf_id);
 	}
+	
+	public int countFindAll() {
+		return seaDao.countFindAll();
+	}
+	
+	public int countFindByTitle(String uf_title) {
+		return seaDao.countFindByTitle(uf_title);
+	}
 }
