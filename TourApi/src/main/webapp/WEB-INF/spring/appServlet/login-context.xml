@@ -18,6 +18,7 @@
 			<mvc:mapping path="/fishUserSea/seaUpdate*" />
 			<mvc:mapping path="/fishUserWater/delete*" />
 			<mvc:mapping path="/fishUserSea/delete*" />
+			<mvc:mapping path="/chat*" />
 			<ref bean="auth"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
