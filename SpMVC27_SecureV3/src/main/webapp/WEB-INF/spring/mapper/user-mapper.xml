@@ -43,10 +43,9 @@
 		true)
 	</insert>
 
-	<update id="update">
+	<update id="update" parameterType="userDetailsVO">
 		UPDATE `tbl_users`
 		SET
-		`user_pass` = #{username},
 		`email` = #{email},
 		`phone` = #{phone},
 		`address` = #{address}

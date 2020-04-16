@@ -1,7 +1,9 @@
 package com.biz.sec.controller;
 
 import java.security.Principal;
+import java.util.List;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +53,13 @@ public class UserController {
 		return "NONEXISTS";
 	}
 	@ResponseBody
+	@RequestMapping(value = "/password",method=RequestMethod.POST)
+	public String password(String password) {
+		boolean ret=userService.checkPassword(password);
+		if(ret) return "PASS_OK";
+		return "PASS_FAIL";
+	}
+	@ResponseBody
 	@RequestMapping(value = "",method=RequestMethod.GET)
 	public String user() {
 		return "user HOME";
@@ -58,22 +67,18 @@ public class UserController {
 	
 	@RequestMapping(value = "/mypage",method=RequestMethod.GET)
 	public String mypage(Principal principal,Model model) {
-		UserDetailsVO userVO=(UserDetailsVO) userDService.loadUserByUsername(principal.getName());
+		UsernamePasswordAuthenticationToken upa=(UsernamePasswordAuthenticationToken) principal;
+		UserDetailsVO userVO=(UserDetailsVO) upa.getPrincipal();
+		//UserDetailsVO userVO=(UserDetailsVO) userDService.loadUserByUsername(principal.getName());
+		userVO.setAuthorities(upa.getAuthorities());
 		model.addAttribute("userVO", userVO);
-		return "user/view";
+		return "auth/user_view";
 	}
 	
-	@RequestMapping(value = "/update",method=RequestMethod.GET)
-	public String update(String username,Model model) {
-		UserDetailsVO userVO=(UserDetailsVO) userDService.loadUserByUsername(username);
-		model.addAttribute("userVO", userVO);
-		return "user/input";
+	@RequestMapping(value = "/mypage",method=RequestMethod.POST)
+	public String mypage(UserDetailsVO userVO,String[] auth,Principal principal,Model model) {
+		int ret=userService.update(userVO,auth);
+		return "redirect:/user/mypage";
 	}
-	
-	@RequestMapping(value = "/update",method=RequestMethod.POST)
-	public String update(UserDetailsVO userVO,Model model) {
-		int ret=userService.update(userVO);
-		model.addAttribute("userVO", userVO);
-		return "redirect:/";
-	}
+
 }

@@ -37,18 +37,19 @@ public class UserDetailsServiceImp implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		//spring security가 사용할 detailVO 선언
-		UserDetailsVO userDetails=userDao.findByUserName(username);
-//		userDetails.setUsername(userVO.getUsername());
-//		userDetails.setPassword(userVO.getPassword());
-		userDetails.setEnabled(true);
-		userDetails.setAccountNonExpired(true);
-		userDetails.setAccountNonLocked(true);
-		userDetails.setCredentialsNonExpired(true);
+		UserDetailsVO userVO=userDao.findByUserName(username);
+		if(userVO==null) {
+			throw new UsernameNotFoundException("User Name이 없습니다");
+		}
+		userVO.setEnabled(true);
+		userVO.setAccountNonExpired(true);
+		userVO.setAccountNonLocked(true);
+		userVO.setCredentialsNonExpired(true);
 		
 		//userDetails 안의 authority property는 이상한 객체로 되있어서
 		//getAuthorities()라는 보일러 코드로 한번 전처리 해주고 값 셋팅
-		userDetails.setAuthorities(this.getAuthorities(username));
-		return userDetails;
+		userVO.setAuthorities(this.getAuthorities(username));
+		return userVO;
 	}
 	
 	/**
@@ -60,9 +61,11 @@ public class UserDetailsServiceImp implements UserDetailsService{
 		List<GrantedAuthority> authorities=new ArrayList<GrantedAuthority>();
 		
 		for(AuthorityVO vo:authList) {// db에 저장된 권한 목록들을
-			//spring security용 auth list로 복사
-			SimpleGrantedAuthority sAuth=new SimpleGrantedAuthority(vo.getAuthority());
-			authorities.add(sAuth);
+			if(!vo.getAuthority().trim().isEmpty()) {
+				//spring security용 auth list로 복사
+				SimpleGrantedAuthority sAuth=new SimpleGrantedAuthority(vo.getAuthority());
+				authorities.add(sAuth);
+			}
 		}
 		return authorities;
 	}
