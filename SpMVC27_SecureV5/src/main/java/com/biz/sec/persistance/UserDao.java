@@ -16,4 +16,6 @@ public interface UserDao {
 	public UserDetailsVO findById(long id);
 	
 	public int update(UserDetailsVO userVO);
+	
+	public int changePass(UserDetailsVO userVO);
 }

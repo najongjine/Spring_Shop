@@ -87,7 +87,7 @@ $(function() {
 </script>
 <body>
 
-<form:form modelAttribute="userVO" action="${rootPath }/join/user" method="post" class="form-group container">
+<form:form modelAttribute="userVO" action="${rootPath }/join/join_next" method="post" class="form-group container">
 <h2 class="jumbotron">회원가입</h2>
 <!--  name="${_csrf.parameterName }" value="${_csrf.token }">  -->
 <form:input path="username" placeholder="User ID" class="form-control"/>
@@ -96,7 +96,10 @@ $(function() {
 <form:input type="password" path="password" placeholder="password" class="form-control"/>
 <input type="password" id="re_password" name="re_password" placeholder="password" class="form-control"/>
 <button class="btn btn-outline-primary" id="btn-join" type="button">회원가입</button>
-<button class="btn btn-outline-success" id="btn-loss" type="button">id/pass 찾기</button>
+
+<a href="${rootPath }/password/resetPass">
+<button class="btn btn-outline-success" id="btn-loss" type="button">비밀번호를 잃어버렸다...</button>
+</a>
 </form:form>
 </body>
 </html>

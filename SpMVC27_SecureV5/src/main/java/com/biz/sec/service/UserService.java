@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -62,8 +63,8 @@ public class UserService {
 	 * @param username
 	 * @param password
 	 * @return
-	 * @update 2020-4-10
-	 * Map<String,String> 구조의 VO 데이터를 UserDetailsVO로 변경
+	 * 2020-4-10
+	 * Map String,String 구조의 VO 데이터를 UserDetailsVO로 변경
 	 */
 	@Transactional
 	public int insert(String username,String password) {
@@ -116,6 +117,7 @@ public class UserService {
 		return userDao.findById(id);
 	}
 
+	@Transactional
 	public int update(UserDetailsVO userVO,String[] authList) {
 		int ret= userDao.update(userVO);
 		if(ret>0) {
@@ -215,4 +217,60 @@ public class UserService {
 		return false;
 	}
 
+	/**
+	 *@since 2020-04-21
+	 *회원정보를 받아서 DB에 저장하고
+	 *회원정보를 활성화 할수 있도록 하기위해 인증정보를 생성한후 controller로 return
+	 */
+	public String insert_getToken(UserDetailsVO userVO) {
+		// DB에 저장
+		userVO.setEnabled(false);
+		String encPassword=passwordEncoder.encode(userVO.getPassword());
+		userVO.setPassword(encPassword);
+		userDao.insert(userVO);
+		
+		String email_token=UUID.randomUUID().toString().split("-")[0].toUpperCase();
+		String enc_email_token=PbeEncryptor.getEncrypt(email_token);
+		//email보내기
+		mailService.email_auth(userVO,email_token);
+		return enc_email_token;
+	}
+
+	public boolean email_token_ok(String username, String secret_key, String secret_value) {
+		boolean bKey=PbeEncryptor.getDecrypt(secret_key).equals(secret_value);
+		if(bKey) {
+			String strUsername=PbeEncryptor.getDecrypt(username);
+			UserDetailsVO userVO=userDao.findByUserName(strUsername);
+			userVO.setEnabled(true);
+			userDao.update(userVO);
+			authDao.delete(userVO.getUsername());
+			List<AuthorityVO> authList=new ArrayList<AuthorityVO>();
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
+			authDao.insert(authList);
+		}
+		return bKey;
+	}
+	
+	public boolean resetPassword(String username,String inputEmail) {
+		UserDetailsVO userVO=userDao.findByUserName(username);
+		if(userVO==null) {
+			return false;
+		}
+		if(!userVO.getEmail().equalsIgnoreCase(inputEmail)) {
+			return false;
+		}
+		String tempPass="1111";
+		String encPass=passwordEncoder.encode(tempPass);
+		userVO.setPassword(encPass);
+		int ret=userDao.changePass(userVO);
+		if(ret<1) return false;
+		String subject="비밀번호를 초기화 시켜드렸습니다";
+		String content="초기화된 비밀번호는  "+tempPass+"  입니다.";
+				
+		mailService.sendMail(userVO.getEmail(), subject, content);
+		
+		return true;
+	}
+	
 }

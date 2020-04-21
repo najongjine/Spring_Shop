@@ -63,4 +63,12 @@
 		WHERE `user_name` = #{username}
 
 	</update>
+	
+	<update id="changePass" parameterType="userDetailsVO">
+		UPDATE `tbl_users`
+		SET
+		`user_pass` = #{password}
+		WHERE `user_name` = #{username}
+
+	</update>
 </mapper> 
