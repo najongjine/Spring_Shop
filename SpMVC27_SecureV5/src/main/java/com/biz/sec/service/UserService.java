@@ -150,17 +150,17 @@ public class UserService {
 		 * int,char,long,double 등등으로 만든 변수는 method로 전달하여 method 내에서 값을 변경 하여도 원본은 절대 변경되지 않음.
 		 */
 		//Authentication >= Principal
-		//session(메모리)의 내용도 업뎃한 내용으로 바꿔주고
+		//업뎃 전 olduserVO 를 수정후 VO 내용으로 세팅해주고
 		Authentication oldAuth=SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsVO oldUserDetailsVO=(UserDetailsVO) oldAuth.getPrincipal();
 		oldUserDetailsVO.setEmail(userVO.getEmail());
 		oldUserDetailsVO.setPhone(userVO.getPhone());
 		oldUserDetailsVO.setAddress(userVO.getAddress());
 		//기본 유저정보 DB에 업뎃 하고
-		int ret= userDao.update(userVO);
+		int ret= userDao.update(oldUserDetailsVO);
 		if(ret>0) {
 			
-			//회원정보 update후, Principal에 담겨있는 정보도 새로 갱신
+			//회원정보 update후, olduservo를 인자로 줘서 Principal에 담겨있는 정보도 새로 갱신
 			Authentication newAuth=new UsernamePasswordAuthenticationToken(oldUserDetailsVO,oldAuth.getCredentials(),
 					oldAuth.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(newAuth);
@@ -191,7 +191,7 @@ public class UserService {
 		// TODO Auto-generated method stub
 		return userDao.selectAll();
 	}
-
+	@Transactional
 	public UserDetailsVO findByUserName(String username) {
 		// TODO Auto-generated method stub
 		return userDao.findByUserName(username);
@@ -222,6 +222,7 @@ public class UserService {
 	 *회원정보를 받아서 DB에 저장하고
 	 *회원정보를 활성화 할수 있도록 하기위해 인증정보를 생성한후 controller로 return
 	 */
+	@Transactional
 	public String insert_getToken(UserDetailsVO userVO) {
 		// DB에 저장
 		userVO.setEnabled(false);
@@ -235,7 +236,7 @@ public class UserService {
 		mailService.email_auth(userVO,email_token);
 		return enc_email_token;
 	}
-
+	@Transactional
 	public boolean email_token_ok(String username, String secret_key, String secret_value) {
 		boolean bKey=PbeEncryptor.getDecrypt(secret_key).equals(secret_value);
 		if(bKey) {
@@ -251,7 +252,7 @@ public class UserService {
 		}
 		return bKey;
 	}
-	
+	@Transactional
 	public boolean resetPassword(String username,String inputEmail) {
 		UserDetailsVO userVO=userDao.findByUserName(username);
 		if(userVO==null) {

@@ -87,3 +87,51 @@
  * sessionAttribute는 보통 vo 객체를 서버 메모리에 저장한후 form화면과 연동하는 구현 이때 반드시 ModelAttribute가 동반되어 구현되어야 한다.
  * sessionAttribute에 등록된 ModelAttribute vo 객체는 서버 메모리에 데이터를 보관하고 있다가 form:form을 통해서 서버로 전달되는 param vo 객체를 받고,
   form:form에서 누락된 input 항목들이 있으면 메모리의 보관된 ModelAttribute VO 에서  paramvo 데이터를 완성하여 사용할수 있도록 만들어 준다. 
+  
+## Transaction
+* Mybatis와 common-dbcp 환경에서는 context.xml에 <tx:annotation-driven/> 설정을 통해서 자동으로 transaction을 구현할수 있다.
+* Mybatis 환경에서 실제 dao 인터페이스와 mapper.xml 등을 연동하여 DB와 query를 주고 받을때는 sqlSessionTemplate 라는 클래스를 통해서
+ 사용한다.
+* DataSourcetransactionManager를 context.xml에 설정을 하게되면 SqlSessionTemplate을 사용하지 않아도 내부적으로 자체 처리가 된다.
+* DataSourceTransactionManager가 SqlSessionTemplte 역활을 대신 수행하기도 한다.
+* 여기에서 <tx:annotation-driven/> 항목이 없고, class나 method에서 @transac 설정이 없으면 DataSoruceTrans...은
+ SqlSessionTemp...과 같은 역활만 수행한다.
+* 혹시 <tx:annotation-driven> 설정을 했는데, @transac 설정이 적용 안될때는  <tx:annotation-driven> 코드 위쪽에 
+ <context:annotation-config>를 설정해 주어야 한다.
+* @transac 에는 특별히 세세하게 설정할수 있는 옵션들이 있다.
+
+## Transactional 옵션
+#### isolation
+* 현재 transaction이 작동되는 과정에서 다른 transaction등이 접근하는 정도를 설정하기
+* read_unccmited: level 0
+- 트랜잭션 처리중 또는 comit이 되기 전 다른 트랜잭션이 읽기를 수행할수 있다.
+* READ_COMMITED : level 1
+- 트랜잭션 commit 된 후에만 다른 트랜잭션이 읽을수 있다.
+* REPEATABLE_READ : level 2
+- 트랜잭션이 진행되는 동안에 select 문장이 사용된 table에 lock을 걸기, select이 실행되거나 실행된 예전인 DB table에는
+ CUD를 수행할수 없도록 하며 단, 다른 트랜잭션에선느 제한적으로 select가 가능.
+* serializable : level 3
+- 완벽한 일관성있는 select를 보장
+
+### propagation : 전파옵션
+* 현재 트랜잭션이 시작되었음을 다른 트랜잭션에 어떻게 알릴것인가
+* required
+- 부모 트랜잭션이 실행되는 과정에서 또 자식(새부적인) 트랜잭션을 실행할수 있도록 허용
+- 이미 자식 트랜잭션이 실행되고 있으면 새로 생성 금지
+* required_new
+- required와 비슷하지만 자식 트랜잭션이 이미 실행되고 있지만 무조건 새로 다시 생성하라.
+
+### readonly
+* 해당 트랜잭셩을 읽기 전용으로 설정하겠다. 기본값은 false.
+### rollbackFor
+* rollback조건을 무엇으로 하겠냐. 기본값은 exception
+### noRollbackFor
+* 특별한 예외에서는 rollback 무시. 기본값 null.
+### timeout
+* DB와 연결하여, transaction이 실행된느 시간이 과도하게 진행될경우 rollback을 수행하도록 설정.
+ 기본값 -1, timeout rollback 금지.
+### list insert 수행할때 주의사항!!!
+* 서비스 코드에서 다음과 같은 코드 절대 사용 금지
+for(VO vo:list){
+dao.insert(vo)
+}
