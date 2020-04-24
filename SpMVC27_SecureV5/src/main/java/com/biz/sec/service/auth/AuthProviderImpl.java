@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.biz.sec.domain.UserDetailsVO;
 
 public class AuthProviderImpl implements AuthenticationProvider{
+	/*
+	 * 서비스 중에서 @service (" " ) 안에 userDetailsService 라고 적혀져있는 서비스를 가져와라
+	 */
 	@Autowired
 	@Qualifier("userDetailsService")
 	private UserDetailsService userDService;

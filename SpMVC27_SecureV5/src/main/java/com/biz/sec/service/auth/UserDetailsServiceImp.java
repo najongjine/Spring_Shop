@@ -19,6 +19,15 @@ import com.biz.sec.persistance.UserDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/*
+ * A implent D, B implent D, C implent D 가 있다고 할시
+ * 여러개의 클래스가 똑같은 인터페이스를 import 하면 
+ * D d 이렇게 하면 햇갈려 버린다.
+ * 
+ * 그러면 스프링은 어느 클래스를 가져다 써야할지 햇갈린다.
+ * 이때 @service("myService" ) A implent D 이렇게 하고
+ * 가져다 쓰는곳에서 @Qualifier("myService") D d 이렇게 해주면 A 쪽 서비스를 가져다 쓴다.
+ */
 @Service("userDetailsService")
 @Slf4j
 @RequiredArgsConstructor

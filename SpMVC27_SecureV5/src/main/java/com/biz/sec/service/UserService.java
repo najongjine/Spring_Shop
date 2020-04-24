@@ -172,6 +172,10 @@ public class UserService {
 		UserDetailsVO userVO=(UserDetailsVO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return passwordEncoder.matches(password,userVO.getPassword());
 	}
+	public boolean checkPassword(String username,String inputtedPassword) {
+		UserDetailsVO userVO=userDao.findByUserName(username);
+		return passwordEncoder.matches(inputtedPassword,userVO.getPassword());
+	}
 	
 	public Collection<GrantedAuthority> getAuthorities(String[] authList){
 		List<GrantedAuthority> authorities=new ArrayList<GrantedAuthority>();
@@ -272,6 +276,26 @@ public class UserService {
 		mailService.sendMail(userVO.getEmail(), subject, content);
 		
 		return true;
+	}
+
+	public boolean changePass(String username, String inputtedPassword) {
+		int ret=0;
+		boolean bRet=false;
+		
+		//입력한 유저가 있나 확인
+		UserDetailsVO userVO=userDao.findByUserName(username);
+		//없으면 false
+		if(userVO==null) return false;
+		
+		//비번 암호화
+		String encPass=passwordEncoder.encode(inputtedPassword);
+		// 암호화 비번으로 세팅
+		userVO.setPassword(encPass);
+		//비번 바꿈
+		userDao.changePass(userVO);
+		bRet=true;
+		
+		return bRet;
 	}
 	
 }

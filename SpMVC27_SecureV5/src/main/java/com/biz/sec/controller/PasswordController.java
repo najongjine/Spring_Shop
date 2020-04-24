@@ -1,9 +1,11 @@
 package com.biz.sec.controller;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.biz.sec.service.UserService;
 
@@ -33,4 +35,26 @@ public class PasswordController {
 		boolean bRet=userService.resetPassword(username, email);
 		return "redirect:/";
 	}
+	
+	@Secured(value = {"ROLE_ADMIN","ROLE_USER","USER"})
+	@RequestMapping(value = "/changePass",method = RequestMethod.GET)
+	public String changePass() {
+		return "password/changePass";
+	}
+	
+	@RequestMapping(value = "/changePass",method = RequestMethod.POST)
+	public String changePass(String username,String newPassword,Model model) {
+		boolean bRet=false;
+		bRet=userService.changePass(username,newPassword);
+		return "redirect:/";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/checkPass",method=RequestMethod.POST)
+	public boolean checkPass(String username,String password) {
+		boolean bRet=false;
+		bRet=userService.checkPassword(username, password);
+		return bRet;
+	}
+	
 }
