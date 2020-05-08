@@ -5,7 +5,7 @@
 
 <mapper namespace="com.biz.tour.dao.usersea.FishUserSeaDao">
 
-	<insert id="insert" parameterType="fishUserSeaVO">
+	<insert id="insert" parameterType="fishUserSeaVO" useGeneratedKeys="true" keyProperty="uf_id">
 		insert into
 		tbl_userfish_sea(
 		uf_username,

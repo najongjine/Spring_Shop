@@ -34,18 +34,18 @@ public class FileUploadToServerService {
 	/*
 	 * 원래 파일이름을 UUID 부착된 파일이름으로 변경하고 변경된 이름으로 서버의 filePath에 저장하고 변경된 파일이름을 return
 	 */
-	public String filesUp(MultipartHttpServletRequest uploaded_files, String whichTable) {
+	public String filesUp(MultipartHttpServletRequest uploaded_files, String whichTable,long fk) {
 		// uploaded_files.getFiles("uploaded_files") 이부분은 jsp form input 에서 지정한 name과
 		// 동일해야함
 		for (MultipartFile file : uploaded_files.getFiles("uploaded_files")) {
 			if (file.isEmpty())
 				return null;
-			fileUp(file, whichTable);
+			fileUp(file, whichTable,fk);
 		}
 		return null;
 	}
 
-	public String fileUp(MultipartFile uploadedFile, String whichTable) {
+	public String fileUp(MultipartFile uploadedFile, String whichTable,long fk) {
 		if (uploadedFile.isEmpty())
 			return null;
 
@@ -73,7 +73,7 @@ public class FileUploadToServerService {
 			// water 이면 wtarePics 테이블에 저장
 			if (whichTable.equalsIgnoreCase("water")) {
 				FishUserWaterPicsVO uwPicsVO = new FishUserWaterPicsVO();
-				long fk = uwService.getMaxID();
+				//long fk = uwService.getMaxID();
 				uwPicsVO.setUfp_fk(fk);
 				uwPicsVO.setUfp_originalFName(originalFileName);
 				uwPicsVO.setUfp_uploadedFName(UploadedFName);
@@ -82,7 +82,7 @@ public class FileUploadToServerService {
 			}
 			if (whichTable.equalsIgnoreCase("sea")) {
 				FishUserSeaPicsVO usPicsVO = new FishUserSeaPicsVO();
-				long fk = usService.getMaxID();
+				//long fk = usService.getMaxID();
 				usPicsVO.setUfp_fk(fk);
 				usPicsVO.setUfp_originalFName(originalFileName);
 				usPicsVO.setUfp_uploadedFName(UploadedFName);

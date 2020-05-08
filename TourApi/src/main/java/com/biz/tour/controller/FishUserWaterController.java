@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@SessionAttributes("userSearchVO")
+@SessionAttributes({"userSearchVO","userVO"})
 @RequestMapping(value = "/fishUserWater")
 public class FishUserWaterController {
 	int itemLimit = 10;
@@ -45,6 +45,12 @@ public class FishUserWaterController {
 	public UserSearchVO makeSearchVO() {
 		UserSearchVO userSearchVO = new UserSearchVO();
 		return userSearchVO;
+	}
+	
+	@ModelAttribute("userVO")
+	public FishUserWaterVO makeUserVO() {
+		FishUserWaterVO userVO=new FishUserWaterVO();
+		return userVO;
 	}
 
 	@RequestMapping(value = "/findAndShow", method = RequestMethod.GET)
@@ -91,14 +97,15 @@ public class FishUserWaterController {
 	public String insert(FishUserWaterVO userVO, MultipartHttpServletRequest uploaded_files,
 			HttpSession session,Model model) {
 		int ret = uWaterService.insert(userVO, session);
+		long fk=userVO.getUf_id();
 
 		// 파일 업로드와 파일 이름을 DB에 저장을 같이함.
-		fUploadService.filesUp(uploaded_files, "water");
+		fUploadService.filesUp(uploaded_files, "water",fk);
 		return "redirect:/fish/water";
 	}
 
 	@RequestMapping(value = "/waterUpdate", method = RequestMethod.GET)
-	public String update(Model model, String strId,HttpSession session) {
+	public String update(@ModelAttribute("userVO") FishUserWaterVO userVO,Model model, String strId,HttpSession session) {
 		String loggedName=(String) session.getAttribute("U_NAME");
 		Long uf_id = (long) -1;
 		Long fk = (long) -1;
@@ -109,11 +116,12 @@ public class FishUserWaterController {
 			log.debug("문자열 변환중 오류: " + uf_id);
 		}
 
-		FishUserWaterVO userVO = uWaterService.findById(uf_id);
+		userVO = uWaterService.findById(uf_id);
 		if(!userVO.getUf_username().equals(loggedName)) {
 			return null;
 		}
 		List<FishUserWaterPicsVO> picsList = uWPicsService.findByFK(fk);
+		log.debug("## userVO in watr update: "+userVO);
 		model.addAttribute("userVO", userVO);
 		model.addAttribute("picsList", picsList);
 		model.addAttribute("MODE", "water");
@@ -132,7 +140,7 @@ public class FishUserWaterController {
 
 		userVO.setUf_id(uf_id);
 		uWaterService.update(userVO);
-		fUploadService.filesUp(uploaded_files, "water");
+		fUploadService.filesUp(uploaded_files, "water",userVO.getUf_id());
 		model.addAttribute("uf_id", userVO.getUf_id());
 		return "redirect:/fishUserWater/view";
 	}
@@ -151,7 +159,7 @@ public class FishUserWaterController {
 		}
 		int ret = uWPicsService.deleteById(ufp_id);
 		model.addAttribute("strId", fk);
-		return "redirect:/fishUser/waterUpdate";
+		return "redirect:/fishUserWater/waterUpdate";
 	}
 
 	// FishUserWaterVO 글 삭제 + sub table 들 cascade delete 구현필요

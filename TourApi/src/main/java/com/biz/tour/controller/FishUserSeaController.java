@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@SessionAttributes("userSearchVO")
+@SessionAttributes({"userSearchVO","userVO"})
 @RequestMapping(value = "/fishUserSea")
 public class FishUserSeaController {
 	int itemLimit = 10;
@@ -47,6 +47,10 @@ public class FishUserSeaController {
 		return userSearchVO;
 	}
 
+	public FishUserSeaVO makeUserVO() {
+		FishUserSeaVO userVO=new FishUserSeaVO();
+		return userVO;
+	}
 	@RequestMapping(value = "/findAndShow", method = RequestMethod.GET)
 	public String findAndShow(UserSearchVO userSearchVO,
 			@RequestParam(value = "pageno", defaultValue = "1") String strPageno, Model model) {
@@ -91,9 +95,10 @@ public class FishUserSeaController {
 	public String insert(FishUserSeaVO userVO, MultipartHttpServletRequest uploaded_files,
 			HttpSession session,Model model) {
 		int ret = uSeaService.insert(userVO, session);
+		long fk=userVO.getUf_id();
 
 		// 파일 업로드와 파일 이름을 DB에 저장을 같이함.
-		fUploadService.filesUp(uploaded_files, "sea");
+		fUploadService.filesUp(uploaded_files, "sea",fk);
 		return "redirect:/fish/sea";
 	}
 
@@ -132,7 +137,7 @@ public class FishUserSeaController {
 
 		userVO.setUf_id(uf_id);
 		uSeaService.update(userVO);
-		fUploadService.filesUp(uploaded_files, "sea");
+		fUploadService.filesUp(uploaded_files, "sea",userVO.getUf_id());
 		model.addAttribute("uf_id", userVO.getUf_id());
 		return "redirect:/fishUserSea/view";
 	}
@@ -151,7 +156,7 @@ public class FishUserSeaController {
 		}
 		int ret = uSPicsService.deleteById(ufp_id);
 		model.addAttribute("strId", fk);
-		return "redirect:/fishUser/seaUpdate";
+		return "redirect:/fishUserSea/seaUpdate";
 	}
 
 	// FishUserSeaVO 글 삭제 + sub table 들 cascade delete 구현필요
