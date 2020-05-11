@@ -58,8 +58,6 @@ $(function() {
 	})
 })
 </script>
-
-
 <nav id="navbar">
 	<a href="${rootPath }/">home</a>
 	<a href="${rootPath }/">성적처리</a>

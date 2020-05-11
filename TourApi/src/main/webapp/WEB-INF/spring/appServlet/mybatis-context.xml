@@ -31,8 +31,10 @@
 	</bean>
 
 	<tx:annotation-driven />
-	<bean class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg index="0" ref="sessionFactory"></constructor-arg>
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="myDS"></property>
 	</bean>
-	<mybatis-spring:scan base-package="com.biz.tour.dao"/>
+	<mybatis-spring:scan
+		base-package="com.biz.tour.dao" />
 </beans>
