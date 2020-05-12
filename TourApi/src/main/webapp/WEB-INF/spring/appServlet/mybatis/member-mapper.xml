@@ -18,4 +18,17 @@
 
 	</insert>
 
+	<update id="update" parameterType="memberVO">
+		UPDATE `tbl_members`
+		SET
+		`u_name` = #{u_name},
+		`u_role` = #{u_role},
+		`email` = #{email},
+		`phone` = #{phone},
+		`address` = #{address},
+		`enabled` = #{enabled}
+		WHERE `u_id` = #{u_id}
+
+	</update>
+
 </mapper> 

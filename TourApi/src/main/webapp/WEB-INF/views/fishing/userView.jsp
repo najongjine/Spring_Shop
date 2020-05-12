@@ -178,8 +178,12 @@ $(function() {
 				</c:otherwise>
 			</c:choose>
 		</section>
-		<button class="btn-update" type="button">modify</button>
-		<button id="btn-delete" type="button">delete</button>
+		<c:if test="${loggedName==userVO.uf_username}">
+			<button class="btn-update" type="button">modify</button>
+		</c:if>
+		<c:if test="${loggedName==userVO.uf_username || loggedName=='admin'}">
+			<button id="btn-delete" type="button">delete</button>
+		</c:if>
 	</section>
 	<section class="commentInput">
 	<br/>

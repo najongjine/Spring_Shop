@@ -23,6 +23,7 @@ import com.biz.tour.service.fileupload.FileUploadToServerService;
 import com.biz.tour.service.usersea.UserSeaCommentService;
 import com.biz.tour.service.usersea.UserSeaPicsService;
 import com.biz.tour.service.usersea.UserSeaService;
+import com.biz.tour.service.util.GetCurrentDateService;
 import com.biz.tour.service.util.PagiService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class FishUserSeaController {
 	private final FileUploadToServerService fUploadService;
 	private final UserSeaCommentService uSCommentService;
 	private final PagiService pagiService;
+	private final GetCurrentDateService dateService;
 
 	@ModelAttribute("userSearchVO")
 	public UserSearchVO makeSearchVO() {
@@ -84,9 +86,13 @@ public class FishUserSeaController {
 	}
 
 	@RequestMapping(value = "/seaInsert", method = RequestMethod.GET)
-	public String insert(Model model) {
+	public String insert(Model model,HttpSession session) {
+		String loggedName=(String) session.getAttribute("U_NAME");
 		FishUserSeaVO userVO = new FishUserSeaVO();
+		userVO.setUf_username(loggedName);
+		userVO.setUf_date(dateService.getCurDate());
 		model.addAttribute("userVO", userVO);
+		model.addAttribute("loggedName", loggedName);
 		model.addAttribute("MODE", "insert");
 		return "fishing/userInput";
 	}
@@ -162,7 +168,8 @@ public class FishUserSeaController {
 	// FishUserSeaVO 글 삭제 + sub table 들 cascade delete 구현필요
 
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
-	public String view(@RequestParam("uf_id") String strUf_id, Model model) {
+	public String view(@RequestParam("uf_id") String strUf_id,HttpSession session, Model model) {
+		String loggedName=(String) session.getAttribute("U_NAME");
 		long uf_id = -1;
 		try {
 			uf_id = Long.valueOf(strUf_id);
@@ -174,6 +181,7 @@ public class FishUserSeaController {
 		List<FishUserSeaPicsVO> picsList = uSPicsService.findByFK(uf_id);
 		model.addAttribute("userVO", userVO);
 		model.addAttribute("picsList", picsList);
+		model.addAttribute("loggedName", loggedName);
 		model.addAttribute("MODE", "sea");
 		return "fishing/userView";
 	}
@@ -233,7 +241,15 @@ public class FishUserSeaController {
 	
 	@RequestMapping(value = "/delete",method=RequestMethod.GET)
 	public String delete(String strId,HttpSession session) {
+		boolean allow=false;
+		String loggedName=(String) session.getAttribute("U_NAME");
 		long uf_id=Long.valueOf(strId);
+		FishUserSeaVO userVO = uSeaService.findById(uf_id);
+		if(loggedName.equals(userVO.getUf_username())) allow=true;
+		if(loggedName.equals("admin")) allow=true;
+		if(allow==false) return null;
+		// ---------여기까지가 유저 게시물 삭제 보안 검증
+		
 		int ret=uSeaService.delete(uf_id,(String)session.getAttribute("U_NAME"));
 		return "redirect:/";
 	}

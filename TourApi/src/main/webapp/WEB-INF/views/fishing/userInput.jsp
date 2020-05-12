@@ -21,10 +21,10 @@
 	<section>
 		<form:form method="post" enctype="multipart/form-data" modelAttribute="userVO">
 			<p>
-				<b>uf_username:</b> <form:input path="uf_username" type="hidden"/>
+				<b>uf_username: ${userVO.uf_username }</b> <form:input path="uf_username" type="hidden"/>
 			</p>
 			<p>
-				<b>date:</b> <form:input path="uf_date" type="hidden"/>
+				<b>date: ${userVO.uf_date }</b> <form:input path="uf_date" type="hidden"/>
 			</p>
 			<p>
 				<b>title:</b> <form:input path="uf_title" />
