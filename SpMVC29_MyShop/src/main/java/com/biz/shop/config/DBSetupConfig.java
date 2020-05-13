@@ -42,9 +42,8 @@ public class DBSetupConfig {
 	public DataSource ds() {
 		BasicDataSource ds=new BasicDataSource();
 		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		log.debug("## "+stringEnc.decrypt(mySqlUserName));
-		ds.setUsername(stringEnc.decrypt(mySqlUserName));
-		ds.setPassword(stringEnc.decrypt(mySqlPassword));
+		ds.setUsername("root");
+		ds.setPassword("aa1234");
 		ds.setUrl("jdbc:mysql://localhost:3306/secure?serverTimeZone=Asia/Seoul");
 		return ds;
 	}

@@ -98,7 +98,7 @@ public class MyPageController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/changepassword",method=RequestMethod.GET)
+	@RequestMapping(value = "/changepassword",method=RequestMethod.POST)
 	public String changePassword(String inputtedPrevPass,String inputtedNewPass) {
 		int ret=memberService.changePassword(inputtedPrevPass,inputtedNewPass);
 		// 비밀번호만 변경 입력받는 form jsp

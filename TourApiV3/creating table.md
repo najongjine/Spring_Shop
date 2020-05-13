@@ -69,6 +69,7 @@ create table tbl_members(
     email VARCHAR(50),
     phone VARCHAR(15),
     address VARCHAR(125),
+    point INT default 0,
     profile_pic VARCHAR(125)
 );
 

@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class FishDetailCommonVO {
+	private long id;
 	private String contentid;//	콘텐츠ID
 	private String contenttypeid;//	콘텐츠타입ID
 	private String booktour;//	교과서 여행지 여부

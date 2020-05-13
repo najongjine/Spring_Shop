@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class FishAreaBasedVO {
+	private long id;
 	private String addr1;
 	private String addr2;
 	private String areacode;

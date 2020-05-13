@@ -24,16 +24,28 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@SessionAttributes("apiSearchVO")
+@SessionAttributes({"apiSearchVO","fishAreaBasedVO","fishDetailVO"})
 @RequestMapping(value = "/fish")
 public class FishAPIController {
 	private final TourService tourService;
 	private final PagiService pagiService;
-	private final SearchApiDataByTitle searchApiservice;;
+	private final SearchApiDataByTitle searchApiservice;
 	
 	@ModelAttribute("apiSearchVO")
 	public APISearchVO makeApiSearchVO() {
 		return new APISearchVO();
+	}
+	
+	@ModelAttribute("fishAreaBasedVO")
+	public FishAreaBasedVO makeFishAreaBasedVO() {
+		FishAreaBasedVO fishAreaBasedVO=new FishAreaBasedVO();
+		return fishAreaBasedVO;
+	}
+	
+	@ModelAttribute("fishDetailVO")
+	public FishDetailCommonVO makeFishDetailVO() {
+		FishDetailCommonVO fishDetailVO=new FishDetailCommonVO();
+		return fishDetailVO;
 	}
 	
 	@RequestMapping(value = "/water",method=RequestMethod.GET)
@@ -56,6 +68,7 @@ public class FishAPIController {
 			APISearchVO apiSearchVO,Model model) {
 		int pageno=Integer.valueOf(strPageno);
 		List<FishAreaBasedVO> fishList=tourService.getFishingAreaBased("areaBased","sea",strPageno);
+		
 		if(apiSearchVO.getSearchOption().equalsIgnoreCase("titleSearch")) {
 			fishList=searchApiservice.findAPIbyTitle(fishList, apiSearchVO.getInputStr());
 		}

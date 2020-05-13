@@ -12,4 +12,5 @@ public interface TourService {
 	public List<FishAreaBasedVO> getFishingAreaBased(String urlLoc, String type, String strPageno);
 
 	public FishDetailCommonVO getFishingDetail(String contentid);
+
 }

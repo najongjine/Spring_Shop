@@ -2,6 +2,8 @@ package com.biz.tour.service.member;
 
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,5 +99,10 @@ public class MemberServiceImp implements MemberService{
 	public int changePassword(String inputtedPrevPass, String inputtedNewPass) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	@Override
+	public void raisePoint(@Valid MemberVO memberVO) {
+		// TODO Auto-generated method stub
+		
 	}
 }
