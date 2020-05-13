@@ -1,0 +1,1 @@
+// login 하는 컨트롤러에 point 테이블에 insert하기

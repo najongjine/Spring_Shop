@@ -1,0 +1,17 @@
+@reqmap(value="mypage")
+
+@reqmap(value="/point", method=get)
+public String showpoint(){
+ return "showpoint";
+}
+
+@reqmap(value="/viewinfo",method=get)
+public String viewinfo(){
+ return "viewinfo";
+}
+
+@reqmap(value="/updateinfo",method=get)
+public String updateinfo(){
+ return "inputinfo";
+}
+

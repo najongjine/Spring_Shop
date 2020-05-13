@@ -29,7 +29,7 @@
 		해당하는 권한이 있는 경우에는 url로 접근을 허락하고 그렇기 않으면(no login|no auth) login 화면으로 redirect. 
 		한가지의 권한만 체크. access="hasAnyRole()":두가지 이상의 권한중 한가지라도 일치하는지 체크 -->
 	<security:http auto-config="true" use-expressions="true">
-		<security:csrf disabled="false" />
+		<security:csrf disabled="true" />
 
 		<security:intercept-url pattern="/**"
 			access="permitAll()" />
