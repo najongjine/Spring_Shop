@@ -1,11 +1,15 @@
 package com.biz.shop.utils;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Scanner;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 /*
  * 키보드에서 문자열을 입력받아서 암호화된 문자열을 생성
@@ -38,19 +42,23 @@ public class MySQLEncMain {
 		System.out.printf("userName: %s \n",encUserName);
 		System.out.printf("password: %s \n",encPassword);
 		
-		String saveFile="./src/main/webapp/WEB-INF/spring/db.connection.properties";
+		ResourceLoader resLoader=new DefaultResourceLoader();
+		Resource res=resLoader.getResource("file:src/main/resources/properties/db.connection.properties");
 		
-		String saveUserName=String.format("mysql.username=ENC(%s)", encUserName);
-		String savePassword=String.format("mysql.password=ENC(%s)", encPassword);
+		String saveUserName=String.format("mysql.username=%s", encUserName);
+		String savePassword=String.format("mysql.password=%s", encPassword);
 		
 		
 		try {
-			PrintWriter out=new PrintWriter(saveFile);
+			PrintWriter out=new PrintWriter(res.getFile());
 			out.println(saveUserName);
 			out.println(savePassword);
 			out.flush();
 			out.close();
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

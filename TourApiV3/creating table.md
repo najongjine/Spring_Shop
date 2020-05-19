@@ -65,7 +65,7 @@ create table tbl_members(
     u_name VARCHAR(50) unique,
     u_password VARCHAR(150),
     u_role VARCHAR(15),
-    enabled boolean default true,
+    enabled boolean default false,
     email VARCHAR(50),
     phone VARCHAR(15),
     address VARCHAR(125),
